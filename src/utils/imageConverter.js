@@ -1,25 +1,31 @@
+const SIZES = {
+  small: 60,
+  medium: 150,
+  large: 300,
+}
+
+const FONTSIZES = {
+  small: "12.27px",
+  medium: "7.11px",
+  large: "3px",
+}
+
+const LINEHEIGHTSIZES = {
+  small: "8px",
+  medium: "5px",
+  large: "2.4px",
+}
+
 export async function imageToAsciiAdvanced(image, options = {}) {
-  const {
-    width = 100,
-    reverse = false,
-    contrast = 1,
-    characters = "@%#*+=-:. ",
-    colored = false,
-    backgroundColor = null,
-    fontSize = 8,
-    fontFamily = "monospace",
-  } = options
+  const { size = "small", colored = false, backgroundColor = null } = options
+  const contrast = 1
+  const asciiChars = "@%#*+=-:. "
+  const fontFamily = "monospace"
+  const width = SIZES[size]
+  const fontSize = FONTSIZES[size]
+  const lineHeight = LINEHEIGHTSIZES[size]
 
   const img = new Image()
-  // img.src =
-  //   typeof image === "string"
-  //     ? image
-  //     : image.default || image.src
-
-  // await new Promise((resolve, reject) => {
-  //   img.onload = resolve
-  //   img.onerror = reject
-  // })
 
   await new Promise((resolve, reject) => {
     img.onload = resolve
@@ -27,7 +33,6 @@ export async function imageToAsciiAdvanced(image, options = {}) {
     img.src = image
   })
 
-  // Calcular altura proporcional se não for fornecida
   const proportion = img.naturalWidth / img.naturalHeight
   const height = width / proportion
 
@@ -35,7 +40,6 @@ export async function imageToAsciiAdvanced(image, options = {}) {
   const ctx = canvas.getContext("2d")
   canvas.width = width
   canvas.height = height
-
   ctx.filter = `contrast(${contrast})`
   ctx.drawImage(img, 0, 0, width, height)
   ctx.filter = "none"
@@ -43,12 +47,10 @@ export async function imageToAsciiAdvanced(image, options = {}) {
   const imageData = ctx.getImageData(0, 0, width, height)
   const pixels = imageData.data
 
-  const asciiChars = reverse ? [...characters].reverse() : [...characters]
-
   const output = document.createElement("pre")
   output.style.fontFamily = fontFamily
-  output.style.fontSize = `${fontSize}px`
-  output.style.lineHeight = `10px`
+  output.style.fontSize = fontSize
+  output.style.lineHeight = lineHeight
   output.style.letterSpacing = `1px`
   output.style.margin = "0"
   output.style.padding = "0"

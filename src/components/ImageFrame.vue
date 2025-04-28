@@ -2,6 +2,11 @@
 import { ref, watch } from "vue"
 import { imageToAsciiAdvanced } from "../utils/imageConverter"
 import { handleImageUpload } from "../utils/handleFile.js"
+import { useSettingsStore } from "../store/settings.js"
+import { storeToRefs } from "pinia"
+
+const SettingsStore = useSettingsStore()
+const { size, colored } = storeToRefs(SettingsStore)
 
 const imagem = ref([])
 const textElement = ref([])
@@ -20,11 +25,8 @@ watch(
     for (const imagePromisse of images) {
       const image = await imagePromisse
       const text = await imageToAsciiAdvanced(image.url, {
-        width: 70,
-        colored: true,
-        characters: "@%#*+=-:. ",
-        fontSize: 16,
-        contrast: 1.5,
+        size: size.value,
+        colored: colored.value,
       })
       if (image?.url) {
         URL.revokeObjectURL(image.url)
@@ -119,6 +121,13 @@ figure {
 
   display: flex;
   justify-content: center;
+
+  &:has(pre) {
+    min-width: auto;
+    width: min-content;
+    min-height: auto;
+    height: min-content;
+  }
 
   &::-webkit-scrollbar {
     width: 15px;
