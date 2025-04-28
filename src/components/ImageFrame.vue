@@ -54,11 +54,13 @@ function gifLoop(texts) {
       if (i) {
         document.getElementById("ascii-container").removeChild(texts[i - 1][0])
       }
-      if (i < texts.length - 1) {
-        document.getElementById("ascii-container").appendChild(texts[i][0])
-        return
+      document.getElementById("ascii-container").appendChild(texts[i][0])
+      if (i == texts.length - 1) {
+        gifLoop(texts)
+        setTimeout(() => {
+          document.getElementById("ascii-container").removeChild(texts[i][0])
+        }, 0)
       }
-      gifLoop(texts)
     }, 100 * i)
   }
 }
