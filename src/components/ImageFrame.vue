@@ -1,34 +1,67 @@
 <script setup>
-import { reactive, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import { imageToAsciiAdvanced } from "../utils/imageConverter"
 import { handleImageUpload } from "../utils/handleFile.js"
 
-const imagem = reactive({})
-const textElement = reactive({})
+const imagem = ref([])
+const textElement = ref([])
 const isDragging = ref(false)
 
 watch(
-  () => imagem.value,
-  async (image) => {
-    if (textElement.value) {
-      document.getElementById("ascii-container").removeChild(textElement.value)
+  () => [...imagem.value],
+  async (images) => {
+    if (textElement.value.length) {
+      document
+        .getElementById("ascii-container")
+        .removeChild(document.getElementById("ascii-container").childNodes[0])
     }
-    const text = await imageToAsciiAdvanced(image.url, {
-      width: 70,
-      colored: true,
-      characters: "@%#*+=-:. ",
-      fontSize: 16,
-      contrast: 1.5,
-    })
-    if (image?.url) {
-      URL.revokeObjectURL(image.url)
+    const array = []
+    textElement.value = []
+    for (const imagePromisse of images) {
+      const image = await imagePromisse
+      const text = await imageToAsciiAdvanced(image.url, {
+        width: 70,
+        colored: true,
+        characters: "@%#*+=-:. ",
+        fontSize: 16,
+        contrast: 1.5,
+      })
+      if (image?.url) {
+        URL.revokeObjectURL(image.url)
+      }
+      array.push([text, image.delay || 0])
     }
-    image = null
+    images = []
+    textElement.value = array
+  },
+  { deep: true }
+)
 
-    textElement.value = text
-    document.getElementById("ascii-container").appendChild(text)
+watch(
+  () => [...textElement.value],
+  (texts) => {
+    if (texts.length === 1) {
+      document.getElementById("ascii-container").appendChild(texts[0][0])
+      return
+    }
+    gifLoop(texts)
   }
 )
+
+function gifLoop(texts) {
+  for (let i = 0; i < texts.length; i++) {
+    setTimeout(() => {
+      if (i) {
+        document.getElementById("ascii-container").removeChild(texts[i - 1][0])
+      }
+      if (i < texts.length - 1) {
+        document.getElementById("ascii-container").appendChild(texts[i][0])
+        return
+      }
+      gifLoop(texts)
+    }, 100 * i)
+  }
+}
 
 function handleDragOver() {
   isDragging.value = true

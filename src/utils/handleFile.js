@@ -1,3 +1,5 @@
+import { extractGifFramesAdvanced2 } from "./transformGif"
+
 export async function handleImageUpload(file, imagemSelecionada) {
   if (!file) return
 
@@ -10,31 +12,37 @@ export async function handleImageUpload(file, imagemSelecionada) {
     console.error("Erro ao carregar imagem:", error)
   }
 }
+
 async function loadImageFile(file) {
   if (!file.type.match("image.*")) {
     throw new Error("Arquivo não é uma imagem")
   }
-  console.log(file)
 
-  return new Promise((resolve, reject) => {
-    const imageUrl = URL.createObjectURL(file)
-    const img = new Image()
+  if (file.type == "image/gif") {
+    return extractGifFramesAdvanced2(file)
+  }
 
-    img.onload = () => {
-      resolve({
-        file: file,
-        url: imageUrl,
-        image: img,
-        width: img.width,
-        height: img.height,
-      })
-    }
+  return [
+    new Promise((resolve, reject) => {
+      const imageUrl = URL.createObjectURL(file)
+      const img = new Image()
 
-    img.onerror = () => {
-      URL.revokeObjectURL(imageUrl)
-      reject(new Error("Falha ao carregar imagem"))
-    }
+      img.onload = () => {
+        resolve({
+          file: file,
+          url: imageUrl,
+          image: img,
+          width: img.width,
+          height: img.height,
+        })
+      }
 
-    img.src = imageUrl
-  })
+      img.onerror = () => {
+        URL.revokeObjectURL(imageUrl)
+        reject(new Error("Falha ao carregar imagem"))
+      }
+
+      img.src = imageUrl
+    }),
+  ]
 }
