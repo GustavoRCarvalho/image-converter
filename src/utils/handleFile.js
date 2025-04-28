@@ -6,7 +6,6 @@ export async function handleImageUpload(file, imagemSelecionada) {
   try {
     const imageData = await loadImageFile(file)
     imagemSelecionada.value = imageData
-    console.log("Imagem carregada:", imagemSelecionada.value)
     // Faça algo com a imagem aqui
   } catch (error) {
     console.error("Erro ao carregar imagem:", error)
