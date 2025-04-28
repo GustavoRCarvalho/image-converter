@@ -1,29 +1,13 @@
-const SIZES = {
-  small: 60,
-  medium: 150,
-  large: 300,
-}
-
-const FONTSIZES = {
-  small: "12.27px",
-  medium: "7.11px",
-  large: "3px",
-}
-
-const LINEHEIGHTSIZES = {
-  small: "8px",
-  medium: "5px",
-  large: "2.4px",
-}
+import { SIZES } from "./constantes"
 
 export async function imageToAsciiAdvanced(image, options = {}) {
   const { size = "small", colored = false, backgroundColor = null } = options
   const contrast = 1
   const asciiChars = "@%#*+=-:. "
   const fontFamily = "monospace"
-  const width = SIZES[size]
-  const fontSize = FONTSIZES[size]
-  const lineHeight = LINEHEIGHTSIZES[size]
+  const width = SIZES[size].width
+  const fontSize = SIZES[size].font
+  const lineHeight = SIZES[size].lineHeight
 
   const img = new Image()
 
