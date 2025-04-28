@@ -35,12 +35,11 @@ watch(
     }
     images = []
     textElement.value = array
-  },
-  { deep: true }
+  }
 )
 
 watch(
-  () => [...textElement.value],
+  () => textElement.value,
   (texts) => {
     if (texts.length === 1) {
       document.getElementById("ascii-container").appendChild(texts[0][0])
