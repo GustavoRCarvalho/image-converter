@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch } from "vue"
 import { imageToAsciiAdvanced } from "../utils/imageConverter"
-import { handleImageUpload } from "../utils/handleFile.js"
 import { useSettingsStore } from "../store/settings.js"
 import { storeToRefs } from "pinia"
 import { useDataStore } from "../store/data.js"
