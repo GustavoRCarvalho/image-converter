@@ -78,8 +78,29 @@ async function onDrop(e) {
   ></figure>
 </template>
 <style scoped>
+@keyframes shaking {
+  0% {
+    border-color: red;
+  }
+  25% {
+    transform: translateX(2px) translateY(2px);
+    border-color: grey;
+  }
+  50% {
+    transform: translateX(0px) translateY(-2px);
+    border-color: red;
+  }
+  75% {
+    transform: translateX(-2px) translateY(2px);
+    border-color: grey;
+  }
+  100% {
+    border-color: red;
+  }
+}
+
 .draging {
-  border-color: red;
+  animation: shaking 0.35s infinite;
 }
 figure {
   border: 2px dashed rgb(0, 217, 255);
@@ -87,7 +108,7 @@ figure {
 
   overflow: auto;
 
-  min-height: calc(40vw - 12px);
+  min-height: calc(40vh - 12px);
   max-height: min(calc(90vh - 36px), 700px);
 
   min-width: calc(40vw - 12px);
@@ -123,5 +144,12 @@ figure {
     margin: 6px;
     background-color: transparent;
   }
+
+  &:hover {
+    box-shadow: 0px 0px 20px 1px rgba(255, 255, 255, 0.3);
+    border-color: rgb(255, 0, 157);
+  }
+
+  transition: all 0.4s;
 }
 </style>
