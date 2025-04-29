@@ -13,8 +13,9 @@ const textElement = ref([])
 const isDragging = ref(false)
 
 watch(
-  () => [...imagem.value],
-  async (images) => {
+  () => [[...imagem.value], colored, size],
+  async ([images, colored, size]) => {
+    if (!images) return
     if (textElement.value.length) {
       document
         .getElementById("ascii-container")
@@ -28,14 +29,11 @@ watch(
         size: size.value,
         colored: colored.value,
       })
-      if (image?.url) {
-        URL.revokeObjectURL(image.url)
-      }
       array.push([text, image.delay || 0])
     }
-    images = []
     textElement.value = array
-  }
+  },
+  { deep: true }
 )
 
 watch(
@@ -77,14 +75,23 @@ function handleDragLeave() {
 function onDrop(e) {
   isDragging.value = false
   const file = e.dataTransfer.files[0]
-  if (file && file.type.match("image.*")) {
-    handleImageUpload(file, imagem)
-  }
+  processingFile(file)
 }
 
 function handleFile(event) {
   const file = event.target.files[0]
-  handleImageUpload(file, imagem)
+  processingFile(file)
+}
+
+async function processingFile(file) {
+  if (file && file.type.match("image.*")) {
+    for (const images of imagem.value) {
+      if (images?.url) {
+        URL.revokeObjectURL(images.url)
+      }
+    }
+    imagem.value = await handleImageUpload(file, imagem)
+  }
 }
 </script>
 <template>
