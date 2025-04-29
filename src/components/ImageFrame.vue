@@ -39,7 +39,7 @@ watch(
     if (textElement.value.length) {
       document
         .getElementById("ascii-container")
-        .removeChild(document.getElementById("ascii-container").childNodes[0])
+        .removeChild(document.getElementById("ascii-container").childNodes[1])
     }
     const array = []
     textElement.value = []
@@ -98,10 +98,14 @@ async function onDrop(e) {
     aria-label="An image, traslated to characters. The image is illustrated using
       preformatted text characters."
   >
-    <span v-show="!hasData">DROP HERE</span>
+    <span class="dropMessage" v-show="!hasData"
+      >DROP IMAGE HERE
+      <br />
+      <span>[ jpg / png / svg / gif ]</span>
+    </span>
   </figure>
 </template>
-<style scoped>
+<style>
 @keyframes shaking {
   0% {
     border-color: red;
@@ -122,7 +126,16 @@ async function onDrop(e) {
     border-color: red;
   }
 }
-
+.dropMessage {
+  text-align: center;
+  font-size: 1.5em;
+  line-height: 2em;
+  color: rgb(0, 217, 255);
+  transition: all 0.4s;
+}
+figure:hover .dropMessage {
+  color: rgb(255, 0, 157);
+}
 .draging {
   animation: shaking 0.35s infinite;
 }
@@ -132,10 +145,10 @@ figure {
 
   overflow: auto;
 
-  min-height: calc(40vh - 40px);
+  min-height: calc(60vh - 40px);
   max-height: min(calc(90vh - 84px), 700px);
 
-  min-width: calc(40vw - 40px);
+  min-width: calc(75vw - 40px);
   /* 84 = (32 + 8 + 2) * 2 */
   max-width: min(calc(100vw - 84px), 1240px);
 
@@ -151,8 +164,12 @@ figure {
     width: min-content;
     min-height: auto;
     height: min-content;
+    aspect-ratio: 1;
     justify-content: flex-start;
     align-items: flex-start;
+  }
+  span {
+    pointer-events: none;
   }
 
   &::-webkit-scrollbar {
