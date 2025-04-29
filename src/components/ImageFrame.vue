@@ -5,9 +5,14 @@ import { useSettingsStore } from "../store/settings.js"
 import { storeToRefs } from "pinia"
 import { useDataStore } from "../store/data.js"
 import { gifLoop } from "../utils/gifLoop.js"
+import { SIZES } from "../utils/constantes.js"
 
 const SettingsStore = useSettingsStore()
-const { size, colored } = storeToRefs(SettingsStore)
+const { size, colored, zoom } = storeToRefs(SettingsStore)
+
+const fontSize = ref(SIZES[size.value]?.font * zoom.value + "px")
+const lineHeight = ref(SIZES[size.value].lineHeight * zoom.value + "px")
+const letterSpacing = ref(SIZES[size.value].letterSpacing * zoom.value + "px")
 
 const DataStore = useDataStore()
 const { setData } = DataStore
@@ -15,6 +20,17 @@ const { data } = storeToRefs(DataStore)
 
 const textElement = ref([])
 const isDragging = ref(false)
+const hasData = ref(false)
+
+watch(
+  () => zoom.value,
+  (zoom) => {
+    fontSize.value = SIZES[size.value]?.font * zoom + "px"
+    lineHeight.value = SIZES[size.value].lineHeight * zoom + "px"
+    letterSpacing.value = SIZES[size.value].letterSpacing * zoom + "px"
+  },
+  { deep: true }
+)
 
 watch(
   () => [[...data.value], colored, size],
@@ -43,6 +59,8 @@ watch(
 watch(
   () => textElement.value,
   (texts) => {
+    if (texts.length === 0) return
+    hasData.value = true
     if (texts.length === 1) {
       document.getElementById("ascii-container").appendChild(texts[0][0])
       return
@@ -70,11 +88,18 @@ async function onDrop(e) {
     @drop.prevent="onDrop"
     @dragover.prevent="handleDragOver"
     @dragleave.prevent="handleDragLeave"
+    :style="{
+      fontSize: fontSize,
+      lineHeight: lineHeight,
+      letterSpacing: letterSpacing,
+    }"
     :class="{ draging: isDragging }"
     id="ascii-container"
     aria-label="An image, traslated to characters. The image is illustrated using
       preformatted text characters."
-  ></figure>
+  >
+    <span v-show="!hasData">DROP HERE</span>
+  </figure>
 </template>
 <style scoped>
 @keyframes shaking {
@@ -107,23 +132,27 @@ figure {
 
   overflow: auto;
 
-  min-height: calc(40vh - 12px);
-  max-height: min(calc(90vh - 36px), 700px);
+  min-height: calc(40vh - 40px);
+  max-height: min(calc(90vh - 84px), 700px);
 
-  min-width: calc(40vw - 12px);
-  max-width: min(calc(100vw - 36px), 1240px);
-
-  padding: 8px;
-  margin: 8px;
+  min-width: calc(40vw - 40px);
+  /* 84 = (32 + 8 + 2) * 2 */
+  max-width: min(calc(100vw - 84px), 1240px);
 
   display: flex;
   justify-content: center;
+  align-items: center;
+
+  padding: 32px;
+  margin: 8px;
 
   &:has(pre) {
     min-width: auto;
     width: min-content;
     min-height: auto;
     height: min-content;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 
   &::-webkit-scrollbar {

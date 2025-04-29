@@ -4,8 +4,8 @@ import { useSettingsStore } from "../store/settings"
 import { useDataStore } from "../store/data"
 
 const SettingsStore = useSettingsStore()
-const { nextSize, toggleColored } = SettingsStore
-const { size, colored } = storeToRefs(SettingsStore)
+const { nextSize, nextZoom, toggleColored } = SettingsStore
+const { size, zoom, colored } = storeToRefs(SettingsStore)
 
 const DataStore = useDataStore()
 const { setData } = DataStore
@@ -20,5 +20,6 @@ async function handleFile(e) {
     {{ colored ? "COLORIDO" : "MONOCROMÁTICO" }}
   </button>
   <button @click="nextSize">{{ size }}</button>
+  <button @click="nextZoom">{{ zoom }} x</button>
   <input type="file" @change="handleFile" />
 </template>

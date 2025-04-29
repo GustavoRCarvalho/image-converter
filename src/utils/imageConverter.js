@@ -12,11 +12,9 @@ export async function imageToAsciiAdvanced(image, options = {}) {
     },
   } = options
   const contrast = 1
-  const asciiChars = "@%#*+=-:. "
+  const asciiChars = "@%$#+=-:. "
   const fontFamily = "monospace"
   const width = SIZES[size].width
-  const fontSize = SIZES[size].font
-  const lineHeight = SIZES[size].lineHeight
 
   const img = new Image()
 
@@ -40,9 +38,6 @@ export async function imageToAsciiAdvanced(image, options = {}) {
 
   const output = document.createElement("pre")
   output.style.fontFamily = fontFamily
-  output.style.fontSize = fontSize
-  output.style.lineHeight = lineHeight
-  output.style.letterSpacing = `1px`
   output.style.margin = "0"
   output.style.padding = "0"
   output.style.width = "min-content"

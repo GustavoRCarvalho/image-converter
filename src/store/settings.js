@@ -11,6 +11,7 @@ export const useSettingsStore = defineStore("settings", {
   state: () => ({
     size: ref("small"),
     colored: ref(true),
+    zoom: ref(1),
   }),
   actions: {
     nextSize() {
@@ -18,6 +19,13 @@ export const useSettingsStore = defineStore("settings", {
     },
     toggleColored() {
       this.colored = !this.colored
+    },
+    nextZoom() {
+      if (this.zoom == 8) {
+        this.zoom = 1
+        return
+      }
+      this.zoom *= 2
     },
   },
 })
