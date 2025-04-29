@@ -4,16 +4,21 @@ import { imageToAsciiAdvanced } from "../utils/imageConverter"
 import { handleImageUpload } from "../utils/handleFile.js"
 import { useSettingsStore } from "../store/settings.js"
 import { storeToRefs } from "pinia"
+import { useDataStore } from "../store/data.js"
+import { gifLoop } from "../utils/gifLoop.js"
 
 const SettingsStore = useSettingsStore()
 const { size, colored } = storeToRefs(SettingsStore)
 
-const imagem = ref([])
+const DataStore = useDataStore()
+const { setData } = DataStore
+const { data } = storeToRefs(DataStore)
+
 const textElement = ref([])
 const isDragging = ref(false)
 
 watch(
-  () => [[...imagem.value], colored, size],
+  () => [[...data.value], colored, size],
   async ([images, colored, size]) => {
     if (!images) return
     if (textElement.value.length) {
@@ -47,23 +52,6 @@ watch(
   }
 )
 
-function gifLoop(texts) {
-  for (let i = 0; i < texts.length; i++) {
-    setTimeout(() => {
-      if (i) {
-        document.getElementById("ascii-container").removeChild(texts[i - 1][0])
-      }
-      document.getElementById("ascii-container").appendChild(texts[i][0])
-      if (i == texts.length - 1) {
-        gifLoop(texts)
-        setTimeout(() => {
-          document.getElementById("ascii-container").removeChild(texts[i][0])
-        }, 0)
-      }
-    }, 100 * i)
-  }
-}
-
 function handleDragOver() {
   isDragging.value = true
 }
@@ -72,30 +60,13 @@ function handleDragLeave() {
   isDragging.value = false
 }
 
-function onDrop(e) {
+async function onDrop(e) {
   isDragging.value = false
   const file = e.dataTransfer.files[0]
-  processingFile(file)
-}
-
-function handleFile(event) {
-  const file = event.target.files[0]
-  processingFile(file)
-}
-
-async function processingFile(file) {
-  if (file && file.type.match("image.*")) {
-    for (const images of imagem.value) {
-      if (images?.url) {
-        URL.revokeObjectURL(images.url)
-      }
-    }
-    imagem.value = await handleImageUpload(file, imagem)
-  }
+  await setData(file)
 }
 </script>
 <template>
-  <input type="file" @change="handleFile" />
   <figure
     @drop.prevent="onDrop"
     @dragover.prevent="handleDragOver"
