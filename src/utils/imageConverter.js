@@ -1,7 +1,16 @@
 import { SIZES } from "./constantes"
 
 export async function imageToAsciiAdvanced(image, options = {}) {
-  const { size = "small", colored = false, backgroundColor = null } = options
+  const {
+    size = "small",
+    colored = false,
+    backgroundColor = null,
+    brightnessOptions = {
+      r: 0.299,
+      g: 0.587,
+      b: 0.114,
+    },
+  } = options
   const contrast = 1
   const asciiChars = "@%#*+=-:. "
   const fontFamily = "monospace"
@@ -21,12 +30,10 @@ export async function imageToAsciiAdvanced(image, options = {}) {
   const height = width / proportion
 
   const canvas = document.createElement("canvas")
-  const ctx = canvas.getContext("2d")
   canvas.width = width
   canvas.height = height
-  ctx.filter = `contrast(${contrast})`
+  const ctx = canvas.getContext("2d")
   ctx.drawImage(img, 0, 0, width, height)
-  ctx.filter = "none"
 
   const imageData = ctx.getImageData(0, 0, width, height)
   const pixels = imageData.data
@@ -53,7 +60,11 @@ export async function imageToAsciiAdvanced(image, options = {}) {
       const g = pixels[pixelIndex + 1]
       const b = pixels[pixelIndex + 2]
 
-      const brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+      const brightness =
+        (brightnessOptions.r * r +
+          brightnessOptions.g * g +
+          brightnessOptions.b * b) /
+        255
       const charIndex = Math.floor(brightness * (asciiChars.length - 1))
       const char = asciiChars[charIndex] || " "
 
