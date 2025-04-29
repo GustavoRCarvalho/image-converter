@@ -9,9 +9,10 @@ export const useDataStore = defineStore("data", {
   actions: {
     async setData(file) {
       if (file && file.type.match("image.*")) {
-        for (const images of this.data) {
-          if (images?.url) {
-            URL.revokeObjectURL(images.url)
+        for (const imagePromise of this.data) {
+          const image = await imagePromise
+          if (image?.url) {
+            URL.revokeObjectURL(image.url)
           }
         }
         const images = handleImageUpload(file)
