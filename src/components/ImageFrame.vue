@@ -77,10 +77,10 @@ function handleDragLeave() {
   isDragging.value = false
 }
 
-async function onDrop(e) {
+function onDrop(e) {
   isDragging.value = false
   const file = e.dataTransfer.files[0]
-  await setData(file)
+  setData(file)
 }
 </script>
 <template>
@@ -128,19 +128,21 @@ async function onDrop(e) {
 }
 .dropMessage {
   text-align: center;
-  font-size: 1.5em;
+  font-size: 20px;
   line-height: 2em;
-  color: rgb(0, 217, 255);
+  letter-spacing: normal;
+  color: var(--blue);
   transition: all 0.4s;
+  user-select: none;
 }
 figure:hover .dropMessage {
-  color: rgb(255, 0, 157);
+  color: var(--pink);
 }
 .draging {
   animation: shaking 0.35s infinite;
 }
 figure {
-  border: 2px dashed rgb(0, 217, 255);
+  border: 2px dashed var(--blue);
   border-radius: 8px;
 
   overflow: auto;
@@ -148,7 +150,7 @@ figure {
   min-height: calc(60vh - 40px);
   max-height: min(calc(90vh - 84px), 700px);
 
-  min-width: calc(75vw - 40px);
+  min-width: min(calc(75vw - 40px), 700px);
   /* 84 = (32 + 8 + 2) * 2 */
   max-width: min(calc(100vw - 84px), 1240px);
 
@@ -164,7 +166,6 @@ figure {
     width: min-content;
     min-height: auto;
     height: min-content;
-    aspect-ratio: 1;
     justify-content: flex-start;
     align-items: flex-start;
   }
@@ -192,7 +193,7 @@ figure {
 
   &:hover {
     box-shadow: 0px 0px 20px 1px rgba(255, 255, 255, 0.3);
-    border-color: rgb(255, 0, 157);
+    border-color: var(--pink);
   }
 
   transition: all 0.4s;
