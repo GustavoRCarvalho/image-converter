@@ -14,6 +14,8 @@ function handleFile(e) {
   const file = e.target.files[0]
   setData(file)
 }
+
+function handleDownload() {}
 </script>
 <template>
   <div class="optionsContainer">
@@ -25,6 +27,9 @@ function handleFile(e) {
     </button>
     <label class="uploadButton" data-text="upload" for="file">upload</label>
     <input v-show="false" id="file" type="file" @change="handleFile" />
+    <button class="downloadButton" :data-text="size" @click="handleDownload">
+      Download
+    </button>
     <button class="zoomButton" @click="nextZoom">{{ zoom }}x</button>
   </div>
 </template>
@@ -47,7 +52,7 @@ label {
   background-color: transparent;
   color: var(--blue);
 
-  padding-block: 0.5em;
+  padding-block: 7px;
 
   border: 1px solid var(--blue);
   border-radius: 8px;
@@ -64,10 +69,13 @@ label {
 }
 .zoomButton {
   width: max-content;
-  padding: 0.5em;
+  padding: 7px;
+  &:hover {
+    font-size: 1.1em;
+  }
 }
 
-@keyframes line-green {
+@keyframes line-orange {
   0% {
     background-position: 0 0;
   }
@@ -75,6 +83,29 @@ label {
     background-position: 0 3.825em;
   }
 }
+
+.downloadButton:hover {
+  border-color: rgb(255, 145, 0);
+  color: rgb(255, 145, 0);
+
+  background: linear-gradient(
+    transparent 70%,
+    rgba(255, 145, 0, 0.726) 90%,
+    transparent
+  );
+  background-size: 24px 150%;
+  animation: line-orange 1s linear infinite;
+}
+
+@keyframes line-green {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 -3.825em;
+  }
+}
+
 .uploadButton:hover {
   background: linear-gradient(
     rgba(0, 255, 0, 0.075),
@@ -151,10 +182,10 @@ label {
 
 @keyframes upload-after {
   0% {
-    top: -1.75em;
+    top: 1.75em;
   }
   100% {
-    top: 2em;
+    top: -2.25em;
   }
 }
 
