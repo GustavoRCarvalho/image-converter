@@ -23,7 +23,7 @@ function handleFile(e) {
     <button class="flickerButton" :data-text="size" @click="nextSize">
       {{ size }}
     </button>
-    <label for="file">upload</label>
+    <label class="uploadButton" data-text="upload" for="file">upload</label>
     <input v-show="false" id="file" type="file" @change="handleFile" />
     <button class="zoomButton" @click="nextZoom">{{ zoom }}x</button>
   </div>
@@ -65,6 +65,107 @@ label {
 .zoomButton {
   width: max-content;
   padding: 0.5em;
+}
+
+@keyframes line-green {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 3.825em;
+  }
+}
+.uploadButton:hover {
+  background: linear-gradient(
+    rgba(0, 255, 0, 0.075),
+    rgba(0, 255, 0, 0.2) 50%,
+    rgba(0, 255, 0, 0.075)
+  );
+  background-size: 24px 150%;
+  border-color: var(--green);
+  color: var(--green);
+  animation: line-green 0.6s linear infinite;
+  overflow: hidden;
+}
+
+@keyframes flicker-upload {
+  0%,
+  100% {
+    opacity: 0;
+    text-shadow: none;
+  }
+  15% {
+    opacity: 1;
+    text-shadow: -2px 0 white, 2px 0 var(--green);
+  }
+  17% {
+    opacity: 0;
+    text-shadow: none;
+  }
+  20% {
+    opacity: 1;
+    text-shadow: 2px 0 white, -2px 0 var(--green),
+      0 0 20px rgba(144, 255, 144, 0.5);
+  }
+  22% {
+    opacity: 0;
+    text-shadow: none;
+  }
+  35% {
+    opacity: 1;
+    text-shadow: -1px 0 var(--green), 1px 0 white,
+      0 0 20px rgba(130, 255, 130, 0.5);
+  }
+  37% {
+    opacity: 0;
+    text-shadow: none;
+  }
+  40% {
+    opacity: 1;
+    text-shadow: 2px 0 var(--green), -2px 0 white;
+  }
+  42% {
+    opacity: 0;
+    text-shadow: none;
+  }
+  85% {
+    opacity: 1;
+    text-shadow: -1px 0 white, 1px 0 var(--green),
+      0 0 20px rgba(43, 255, 43, 0.5);
+  }
+  87% {
+    opacity: 0;
+    text-shadow: none;
+  }
+}
+
+.uploadButton:hover:before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  filter: blur(1px);
+  animation: flicker-upload 2s linear infinite;
+}
+
+@keyframes upload-after {
+  0% {
+    top: -1.75em;
+  }
+  100% {
+    top: 2em;
+  }
+}
+
+.uploadButton:hover:after {
+  content: "011001010";
+  position: absolute;
+  opacity: 0.2;
+  left: 0;
+  right: 0;
+  text-align: center;
+  animation: upload-after 0.6s linear infinite;
 }
 
 @keyframes rainbow {

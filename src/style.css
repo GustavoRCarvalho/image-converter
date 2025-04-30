@@ -15,6 +15,7 @@
 body {
   --pink: rgb(255, 0, 157);
   --blue: rgb(0, 243, 255);
+  --green: rgb(0, 255, 0);
 
   display: flex;
   align-items: center;
