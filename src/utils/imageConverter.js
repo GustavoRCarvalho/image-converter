@@ -38,8 +38,6 @@ export async function imageToAsciiAdvanced(image, options = {}) {
 
   const output = document.createElement("pre")
   output.style.fontFamily = fontFamily
-  output.style.margin = "0"
-  output.style.padding = "0"
   output.style.width = "min-content"
 
   if (backgroundColor) {

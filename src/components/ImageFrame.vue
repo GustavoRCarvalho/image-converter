@@ -4,15 +4,23 @@ import { imageToAsciiAdvanced } from "../utils/imageConverter"
 import { useSettingsStore } from "../store/settings.js"
 import { storeToRefs } from "pinia"
 import { useDataStore } from "../store/data.js"
-import { gifLoop } from "../utils/gifLoop.js"
 import { SIZES } from "../utils/constantes.js"
 
 const SettingsStore = useSettingsStore()
 const { size, colored, zoom } = storeToRefs(SettingsStore)
 
-const fontSize = ref(SIZES[size.value]?.font * zoom.value + "px")
-const lineHeight = ref(SIZES[size.value].lineHeight * zoom.value + "px")
-const letterSpacing = ref(SIZES[size.value].letterSpacing * zoom.value + "px")
+const fontSize = ref(SIZES[size.value].font + "px")
+const lineHeight = ref(SIZES[size.value].lineHeight + "px")
+const letterSpacing = ref(SIZES[size.value].letterSpacing + "px")
+
+watch(
+  () => size.value,
+  (size) => {
+    fontSize.value = SIZES[size].font + "px"
+    lineHeight.value = SIZES[size].lineHeight + "px"
+    letterSpacing.value = SIZES[size].letterSpacing + "px"
+  }
+)
 
 const DataStore = useDataStore()
 const { setData } = DataStore
@@ -21,35 +29,20 @@ const { data } = storeToRefs(DataStore)
 const textElement = ref([])
 const isDragging = ref(false)
 const hasData = ref(false)
-
-watch(
-  () => zoom.value,
-  (zoom) => {
-    fontSize.value = SIZES[size.value]?.font * zoom + "px"
-    lineHeight.value = SIZES[size.value].lineHeight * zoom + "px"
-    letterSpacing.value = SIZES[size.value].letterSpacing * zoom + "px"
-  },
-  { deep: true }
-)
+const content = ref(null)
 
 watch(
   () => [[...data.value], colored, size],
   async ([images, colored, size]) => {
     if (!images) return
-    if (textElement.value.length) {
-      document
-        .getElementById("ascii-container")
-        .removeChild(document.getElementById("ascii-container").childNodes[1])
-    }
     const array = []
-    textElement.value = []
     for (const imagePromisse of images) {
       const image = await imagePromisse
       const text = await imageToAsciiAdvanced(image.url, {
         size: size.value,
         colored: colored.value,
       })
-      array.push([text, image.delay || 0])
+      array.push(text)
     }
     textElement.value = array
   },
@@ -62,12 +55,25 @@ watch(
     if (texts.length === 0) return
     hasData.value = true
     if (texts.length === 1) {
-      document.getElementById("ascii-container").appendChild(texts[0][0])
+      content.value.firstChild.replaceWith(texts[0])
       return
     }
     gifLoop(texts)
   }
 )
+
+function gifLoop(texts) {
+  for (let i = 0; i <= texts.length; i++) {
+    setTimeout(() => {
+      if (textElement.value[0] != texts[0]) return
+      if (i == texts.length) {
+        gifLoop(texts)
+      } else {
+        content.value.firstChild.replaceWith(texts[i])
+      }
+    }, 100 * i)
+  }
+}
 
 function handleDragOver() {
   isDragging.value = true
@@ -89,11 +95,16 @@ function onDrop(e) {
     @dragover.prevent="handleDragOver"
     @dragleave.prevent="handleDragLeave"
     :style="{
+      '--zoom': zoom,
       fontSize: fontSize,
       lineHeight: lineHeight,
       letterSpacing: letterSpacing,
     }"
-    :class="{ draging: isDragging }"
+    :class="{
+      draging: isDragging,
+      hasData: hasData,
+      optionLarge: size === 'large',
+    }"
     id="ascii-container"
     aria-label="An image, traslated to characters. The image is illustrated using
       preformatted text characters."
@@ -103,6 +114,9 @@ function onDrop(e) {
       <br />
       <span>[ jpg / png / svg / gif ]</span>
     </span>
+    <div v-show="hasData" ref="content">
+      <pre></pre>
+    </div>
   </figure>
 </template>
 <style>
@@ -141,6 +155,18 @@ figure:hover .dropMessage {
 .draging {
   animation: shaking 0.35s infinite;
 }
+.optionLarge:hover {
+  box-shadow: none;
+  border-color: var(--blue);
+}
+.hasData {
+  min-width: auto;
+  width: min-content;
+  min-height: auto;
+  height: min-content;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
 figure {
   border: 2px dashed var(--blue);
   border-radius: 8px;
@@ -158,37 +184,15 @@ figure {
   justify-content: center;
   align-items: center;
 
-  padding: 32px;
   margin: 8px;
 
-  &:has(pre) {
-    min-width: auto;
-    width: min-content;
-    min-height: auto;
-    height: min-content;
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
   span {
     pointer-events: none;
   }
 
   &::-webkit-scrollbar {
-    width: 15px;
-    height: 15px;
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgb(89, 89, 89);
-    border: 5px solid transparent;
-    background-clip: padding-box;
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    margin: 6px;
-    background-color: transparent;
+    width: 0px;
+    height: 0px;
   }
 
   &:hover {
@@ -197,5 +201,11 @@ figure {
   }
 
   transition: all 0.4s;
+}
+pre {
+  transform: scale(var(--zoom));
+  transform-origin: 0 0;
+  transition: transform 0.3s ease;
+  padding: calc(32px / var(--zoom));
 }
 </style>
