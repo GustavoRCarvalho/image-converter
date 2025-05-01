@@ -70,9 +70,6 @@ label {
 .zoomButton {
   width: max-content;
   padding: 7px;
-  &:hover {
-    font-size: 1.1em;
-  }
 }
 
 @keyframes line-orange {
