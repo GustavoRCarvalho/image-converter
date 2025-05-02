@@ -1,18 +1,13 @@
 <script setup>
 import { ref, watch } from "vue"
-import { useSettingsStore } from "../store/settings.js"
 import { storeToRefs } from "pinia"
 import { useDataStore } from "../store/data.js"
 import { SIZES } from "../utils/constantes.js"
 import { createASCII } from "../utils/createAscii.js"
 
-const SettingsStore = useSettingsStore()
-const { nextSize } = SettingsStore
-const { size, colored, zoom } = storeToRefs(SettingsStore)
-
 const DataStore = useDataStore()
 const { setData, setASCII } = DataStore
-const { data, isGif } = storeToRefs(DataStore)
+const { data, isGif, size, colored, zoom } = storeToRefs(DataStore)
 
 const fontSize = ref(SIZES[size.value].font + "px")
 const lineHeight = ref(SIZES[size.value].lineHeight + "px")
@@ -99,7 +94,7 @@ function handleDragLeave() {
 function onDrop(e) {
   isDragging.value = false
   const file = e.dataTransfer.files[0]
-  setData(file, nextSize, size.value)
+  setData(file)
 }
 </script>
 <template>

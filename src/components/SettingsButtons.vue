@@ -1,20 +1,15 @@
 <script setup>
 import { storeToRefs } from "pinia"
-import { useSettingsStore } from "../store/settings"
 import { useDataStore } from "../store/data"
 import { handleSaveAscii } from "../utils/exportImage"
 
-const SettingsStore = useSettingsStore()
-const { nextSize, nextZoom, toggleColored } = SettingsStore
-const { size, zoom, colored } = storeToRefs(SettingsStore)
-
 const DataStore = useDataStore()
-const { setData } = DataStore
-const { ascii, isGif } = storeToRefs(DataStore)
+const { setData, nextSize, nextZoom, toggleColored } = DataStore
+const { ascii, size, zoom, colored } = storeToRefs(DataStore)
 
 function handleFile(e) {
   const file = e.target.files[0]
-  setData(file, nextSize, size.value)
+  setData(file)
 }
 
 async function handleDownload() {
@@ -27,11 +22,7 @@ async function handleDownload() {
     <button :class="{ buttonColored: colored }" @click="toggleColored">
       {{ colored ? "COLORIDO" : "MONOCROMÁTICO" }}
     </button>
-    <button
-      class="flickerButton"
-      :data-text="size"
-      @click="() => nextSize(isGif)"
-    >
+    <button class="flickerButton" :data-text="size" @click="nextSize">
       {{ size }}
     </button>
     <label class="uploadButton" data-text="upload" for="file">upload</label>
