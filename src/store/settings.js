@@ -14,7 +14,11 @@ export const useSettingsStore = defineStore("settings", {
     zoom: ref(1),
   }),
   actions: {
-    nextSize() {
+    nextSize(isGif) {
+      if (isGif) {
+        this.size = this.size === "small" ? "medium" : "small"
+        return
+      }
       this.size = sizesUtilLib[this.size]
     },
     toggleColored() {

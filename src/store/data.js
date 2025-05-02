@@ -5,11 +5,14 @@ import { handleImageUpload } from "../utils/handleFile"
 export const useDataStore = defineStore("data", {
   state: () => ({
     data: ref([]),
-    ascii: ref(""),
+    isGif: ref(false),
+    ascii: ref({ small: "", medium: "", large: "" }),
   }),
   actions: {
-    async setData(file) {
+    async setData(file, nextSize, size) {
       if (file && file.type.match("image.*")) {
+        this.isGif = file.type === "image/gif"
+        if (size == "large" && this.isGif) nextSize(this.isGif)
         for (const imagePromise of this.data) {
           const image = await imagePromise
           if (image?.url) {
@@ -20,8 +23,10 @@ export const useDataStore = defineStore("data", {
         this.data = await images
       }
     },
-    setASCII(string) {
-      this.ascii = string
+    setASCII({ stringSmall, stringMedium, stringLarge }) {
+      this.ascii.small = stringSmall
+      this.ascii.medium = stringMedium
+      this.ascii.large = stringLarge
     },
   },
 })

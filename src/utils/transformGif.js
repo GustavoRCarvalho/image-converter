@@ -80,11 +80,8 @@ export async function extractGifFramesAdvanced2(gifFile) {
         const img = new Image()
         img.onload = () => {
           resolve({
-            file: gifFile, // O arquivo GIF original
+            type: gifFile.type,
             url: imageUrl, // URL de dados do frame
-            image: img, // Objeto Image carregado
-            width: img.width,
-            height: img.height,
             delay: frame.delay,
             disposalType: frame.disposalType,
             frameIndex: i,

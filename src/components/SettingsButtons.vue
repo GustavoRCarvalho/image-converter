@@ -10,11 +10,11 @@ const { size, zoom, colored } = storeToRefs(SettingsStore)
 
 const DataStore = useDataStore()
 const { setData } = DataStore
-const { ascii } = storeToRefs(DataStore)
+const { ascii, isGif } = storeToRefs(DataStore)
 
 function handleFile(e) {
   const file = e.target.files[0]
-  setData(file)
+  setData(file, nextSize, size.value)
 }
 
 async function handleDownload() {
@@ -27,7 +27,11 @@ async function handleDownload() {
     <button :class="{ buttonColored: colored }" @click="toggleColored">
       {{ colored ? "COLORIDO" : "MONOCROMÁTICO" }}
     </button>
-    <button class="flickerButton" :data-text="size" @click="nextSize">
+    <button
+      class="flickerButton"
+      :data-text="size"
+      @click="() => nextSize(isGif)"
+    >
       {{ size }}
     </button>
     <label class="uploadButton" data-text="upload" for="file">upload</label>

@@ -1,17 +1,18 @@
 <script setup>
 import { ref, watch } from "vue"
-import { imageToAsciiAdvanced } from "../utils/imageConverter"
 import { useSettingsStore } from "../store/settings.js"
 import { storeToRefs } from "pinia"
 import { useDataStore } from "../store/data.js"
 import { SIZES } from "../utils/constantes.js"
+import { createASCII } from "../utils/createAscii.js"
 
 const SettingsStore = useSettingsStore()
+const { nextSize } = SettingsStore
 const { size, colored, zoom } = storeToRefs(SettingsStore)
 
 const DataStore = useDataStore()
 const { setData, setASCII } = DataStore
-const { data } = storeToRefs(DataStore)
+const { data, isGif } = storeToRefs(DataStore)
 
 const fontSize = ref(SIZES[size.value].font + "px")
 const lineHeight = ref(SIZES[size.value].lineHeight + "px")
@@ -26,41 +27,44 @@ watch(
   }
 )
 
-const textElement = ref([])
+const textElement = ref({
+  small: [],
+  medium: [],
+  large: [],
+})
 const isDragging = ref(false)
 const hasData = ref(false)
 const content = ref(null)
 
 watch(
-  () => [[...data.value], size],
-  async ([images, size]) => {
+  () => [...data.value],
+  async (images) => {
     if (!images) return
-    const array = []
-    for (const imagePromisse of images) {
-      const image = await imagePromisse
-      const text = await imageToAsciiAdvanced(image.url, {
-        size: size.value,
-      })
-      array.push([text.output, text.outputColored])
-      setASCII(text.asciiHtml)
+    const arraysTexts = await createASCII({
+      images: images,
+      isGif: isGif.value,
+      setASCII: setASCII,
+    })
+    textElement.value = {
+      small: arraysTexts.small,
+      medium: arraysTexts.medium,
+      large: arraysTexts.large,
     }
-    textElement.value = array
   },
   { deep: true }
 )
 
 watch(
-  () => [textElement.value, colored.value],
-  ([texts, isColored], [_oldTexts, oldIsColored]) => {
-    if (texts.length === 0) return
-    if (texts.length > 1 && oldIsColored == isColored) gifLoop(texts, isColored)
+  () => [textElement.value, colored.value, size.value],
+  ([texts, isColored, size], [_oldTexts, oldIsColored, oldSize]) => {
+    const textActual = texts[size]
+    if (textActual.length === 0) return
     hasData.value = true
-    if (texts.length === 1) {
-      if (isColored) {
-        content.value.firstChild.replaceWith(texts[0][1])
-      } else {
-        content.value.firstChild.replaceWith(texts[0][0])
-      }
+    if (textActual.length > 1 && oldIsColored == isColored && size == oldSize) {
+      gifLoop(texts, isColored)
+    }
+    if (textActual.length === 1) {
+      content.value.firstChild.replaceWith(textActual[0][isColored ? 1 : 0])
       return
     }
   },
@@ -69,18 +73,16 @@ watch(
   }
 )
 
-function gifLoop(texts, isColored) {
-  for (let i = 0; i <= texts.length; i++) {
+function gifLoop(texts) {
+  for (let i = 0; i <= texts[size.value].length; i++) {
     setTimeout(() => {
-      if (textElement.value[0] != texts[0]) return
-      if (i == texts.length) {
-        gifLoop(texts, isColored)
+      if (textElement.value[size.value][0] != texts[size.value][0]) return
+      if (i == texts[size.value].length) {
+        gifLoop(texts)
       } else {
-        if (colored.value) {
-          content.value.firstChild.replaceWith(texts[i][1])
-        } else {
-          content.value.firstChild.replaceWith(texts[i][0])
-        }
+        content.value.firstChild.replaceWith(
+          texts[size.value][i][colored.value ? 1 : 0]
+        )
       }
     }, 100 * i)
   }
@@ -97,7 +99,7 @@ function handleDragLeave() {
 function onDrop(e) {
   isDragging.value = false
   const file = e.dataTransfer.files[0]
-  setData(file)
+  setData(file, nextSize, size.value)
 }
 </script>
 <template>

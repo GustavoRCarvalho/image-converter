@@ -29,11 +29,8 @@ async function loadImageFile(file) {
 
       img.onload = () => {
         resolve({
-          file: file,
           url: imageUrl,
-          image: img,
-          width: img.width,
-          height: img.height,
+          type: file.type,
         })
       }
 
