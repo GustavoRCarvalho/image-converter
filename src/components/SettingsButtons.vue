@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia"
 import { useSettingsStore } from "../store/settings"
 import { useDataStore } from "../store/data"
+import { handleSaveAscii } from "../utils/exportImage"
 
 const SettingsStore = useSettingsStore()
 const { nextSize, nextZoom, toggleColored } = SettingsStore
@@ -9,13 +10,17 @@ const { size, zoom, colored } = storeToRefs(SettingsStore)
 
 const DataStore = useDataStore()
 const { setData } = DataStore
+const { ascii } = storeToRefs(DataStore)
 
 function handleFile(e) {
   const file = e.target.files[0]
   setData(file)
 }
 
-function handleDownload() {}
+async function handleDownload() {
+  const domHTML = document.getElementById("ascii-image").outerHTML
+  handleSaveAscii({ asciiColor: domHTML, ascii: ascii.value, useColor: true })
+}
 </script>
 <template>
   <div class="optionsContainer">

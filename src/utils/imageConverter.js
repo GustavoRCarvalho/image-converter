@@ -3,17 +3,14 @@ import { SIZES } from "./constantes"
 export async function imageToAsciiAdvanced(image, options = {}) {
   const {
     size = "small",
-    colored = false,
-    backgroundColor = null,
     brightnessOptions = {
-      r: 0.299,
-      g: 0.587,
-      b: 0.114,
+      r: 0.4,
+      g: 0.4,
+      b: 0.4,
     },
   } = options
-  const contrast = 1
-  const asciiChars = "@%$#+=-:. "
-  const fontFamily = "monospace"
+  const asciiChars = " .:-=+#$%@"
+  const fontFamily = "Courier New"
   const width = SIZES[size].width
 
   const img = new Image()
@@ -38,12 +35,15 @@ export async function imageToAsciiAdvanced(image, options = {}) {
 
   const output = document.createElement("pre")
   output.style.fontFamily = fontFamily
+  output.style.fontWeight = "Bold"
   output.style.width = "min-content"
 
-  if (backgroundColor) {
-    output.style.backgroundColor = backgroundColor
-  }
+  const outputColored = document.createElement("pre")
+  outputColored.style.fontFamily = fontFamily
+  outputColored.style.fontWeight = "Bold"
+  outputColored.style.width = "min-content"
 
+  let asciiHtmlColored = ""
   let asciiHtml = ""
 
   for (let y = 0; y < height; y++) {
@@ -61,16 +61,15 @@ export async function imageToAsciiAdvanced(image, options = {}) {
       const charIndex = Math.floor(brightness * (asciiChars.length - 1))
       const char = asciiChars[charIndex] || " "
 
-      if (colored) {
-        const color = `rgb(${r},${g},${b})`
-        asciiHtml += `<span style="color:${color}">${char}</span>`
-      } else {
-        asciiHtml += char
-      }
+      const color = `rgb(${r},${g},${b})`
+      asciiHtmlColored += `<span style="color:${color}">${char}</span>`
+      asciiHtml += char
     }
+    asciiHtmlColored += "\n"
     asciiHtml += "\n"
   }
 
   output.innerHTML = asciiHtml
-  return output
+  outputColored.innerHTML = asciiHtmlColored
+  return { output: output, outputColored: outputColored, asciiHtml: asciiHtml }
 }

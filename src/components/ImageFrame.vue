@@ -9,6 +9,10 @@ import { SIZES } from "../utils/constantes.js"
 const SettingsStore = useSettingsStore()
 const { size, colored, zoom } = storeToRefs(SettingsStore)
 
+const DataStore = useDataStore()
+const { setData, setASCII } = DataStore
+const { data } = storeToRefs(DataStore)
+
 const fontSize = ref(SIZES[size.value].font + "px")
 const lineHeight = ref(SIZES[size.value].lineHeight + "px")
 const letterSpacing = ref(SIZES[size.value].letterSpacing + "px")
@@ -22,27 +26,23 @@ watch(
   }
 )
 
-const DataStore = useDataStore()
-const { setData } = DataStore
-const { data } = storeToRefs(DataStore)
-
 const textElement = ref([])
 const isDragging = ref(false)
 const hasData = ref(false)
 const content = ref(null)
 
 watch(
-  () => [[...data.value], colored, size],
-  async ([images, colored, size]) => {
+  () => [[...data.value], size],
+  async ([images, size]) => {
     if (!images) return
     const array = []
     for (const imagePromisse of images) {
       const image = await imagePromisse
       const text = await imageToAsciiAdvanced(image.url, {
         size: size.value,
-        colored: colored.value,
       })
-      array.push(text)
+      array.push([text.output, text.outputColored])
+      setASCII(text.asciiHtml)
     }
     textElement.value = array
   },
@@ -50,26 +50,37 @@ watch(
 )
 
 watch(
-  () => textElement.value,
-  (texts) => {
+  () => [textElement.value, colored.value],
+  ([texts, isColored], [_oldTexts, oldIsColored]) => {
     if (texts.length === 0) return
+    if (texts.length > 1 && oldIsColored == isColored) gifLoop(texts, isColored)
     hasData.value = true
     if (texts.length === 1) {
-      content.value.firstChild.replaceWith(texts[0])
+      if (isColored) {
+        content.value.firstChild.replaceWith(texts[0][1])
+      } else {
+        content.value.firstChild.replaceWith(texts[0][0])
+      }
       return
     }
-    gifLoop(texts)
+  },
+  {
+    deep: true,
   }
 )
 
-function gifLoop(texts) {
+function gifLoop(texts, isColored) {
   for (let i = 0; i <= texts.length; i++) {
     setTimeout(() => {
       if (textElement.value[0] != texts[0]) return
       if (i == texts.length) {
-        gifLoop(texts)
+        gifLoop(texts, isColored)
       } else {
-        content.value.firstChild.replaceWith(texts[i])
+        if (colored.value) {
+          content.value.firstChild.replaceWith(texts[i][1])
+        } else {
+          content.value.firstChild.replaceWith(texts[i][0])
+        }
       }
     }, 100 * i)
   }
@@ -114,7 +125,7 @@ function onDrop(e) {
       <br />
       <span>[ jpg / png / svg / gif ]</span>
     </span>
-    <div v-show="hasData" ref="content">
+    <div v-show="hasData" id="ascii-image" ref="content">
       <pre></pre>
     </div>
   </figure>

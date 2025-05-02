@@ -5,6 +5,7 @@ import { handleImageUpload } from "../utils/handleFile"
 export const useDataStore = defineStore("data", {
   state: () => ({
     data: ref([]),
+    ascii: ref(""),
   }),
   actions: {
     async setData(file) {
@@ -18,6 +19,9 @@ export const useDataStore = defineStore("data", {
         const images = handleImageUpload(file)
         this.data = await images
       }
+    },
+    setASCII(string) {
+      this.ascii = string
     },
   },
 })
