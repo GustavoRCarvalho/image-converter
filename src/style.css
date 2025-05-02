@@ -48,6 +48,13 @@ body {
   src: url("/fonts/Silkscreen/Silkscreen-Bold.ttf") format("truetype");
   font-display: swap;
 }
+@font-face {
+  font-family: unifont;
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/unifont/unifont.woff") format("woff");
+  font-display: swap;
+}
 
 * {
   margin: 0;
