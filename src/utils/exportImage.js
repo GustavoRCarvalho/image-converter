@@ -1,13 +1,10 @@
 export const handleSaveAscii = ({ asciiColor, ascii, useColor }) => {
-  const asciiArt = ascii
-  const colorAsciiArt = asciiColor
-
-  if (!asciiArt && !colorAsciiArt) return
+  if (!ascii && !asciiColor) return
 
   const canvas = document.createElement("canvas")
   const ctx = canvas.getContext("2d")
 
-  const lines = asciiArt.split("\n").filter((line) => line.length > 0)
+  const lines = ascii.split("\n").filter((line) => line.length > 0)
   const charHeight = lines.length
   const charWidth = lines[0].length
 
@@ -32,7 +29,7 @@ export const handleSaveAscii = ({ asciiColor, ascii, useColor }) => {
 
   if (useColor) {
     const tempDiv = document.createElement("div")
-    tempDiv.innerHTML = colorAsciiArt
+    tempDiv.innerHTML = asciiColor
     const pre = tempDiv.querySelector("pre")
     const spans = Array.from(pre.querySelectorAll("span"))
     let spanIndex = 0

@@ -32,10 +32,10 @@ export const useDataStore = defineStore("data", {
         this.data = await images
       }
     },
-    setASCII({ stringSmall, stringMedium, stringLarge }) {
-      this.ascii.small = stringSmall
-      this.ascii.medium = stringMedium
-      this.ascii.large = stringLarge
+    setASCII({ textSmall, textMedium, textLarge }) {
+      this.ascii.small = textSmall
+      this.ascii.medium = textMedium
+      this.ascii.large = textLarge
     },
     nextSize() {
       if (this.isGif) {

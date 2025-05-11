@@ -2,10 +2,21 @@
 import { storeToRefs } from "pinia"
 import { useDataStore } from "../store/data"
 import { handleSaveAscii } from "../utils/exportImage"
+import { ref, watch } from "vue"
 
 const DataStore = useDataStore()
 const { setData, nextSize, nextZoom, toggleColored } = DataStore
-const { ascii, size, zoom, colored } = storeToRefs(DataStore)
+const { ascii, size, zoom, colored, isGif } = storeToRefs(DataStore)
+
+const hasData = ref(false)
+
+watch(
+  () => ascii.value,
+  (asciiValue) => {
+    hasData.value = !!asciiValue.small.length
+  },
+  { deep: true }
+)
 
 function handleFile(e) {
   const file = e.target.files[0]
@@ -14,7 +25,11 @@ function handleFile(e) {
 
 async function handleDownload() {
   const domHTML = document.getElementById("ascii-image").outerHTML
-  handleSaveAscii({ asciiColor: domHTML, ascii: ascii.value, useColor: true })
+  handleSaveAscii({
+    asciiColor: domHTML,
+    ascii: ascii.value[size.value],
+    useColor: true,
+  })
 }
 </script>
 <template>
@@ -27,7 +42,12 @@ async function handleDownload() {
     </button>
     <label class="uploadButton" data-text="upload" for="file">upload</label>
     <input v-show="false" id="file" type="file" @change="handleFile" />
-    <button class="downloadButton" :data-text="size" @click="handleDownload">
+    <button
+      class="downloadButton"
+      :disabled="!hasData || isGif"
+      :data-text="size"
+      @click="handleDownload"
+    >
       Download
     </button>
     <button class="zoomButton" @click="nextZoom">{{ zoom }}x</button>
@@ -81,7 +101,7 @@ label {
   }
 }
 
-.downloadButton:hover {
+.downloadButton:hover:not([disabled]) {
   border-color: rgb(255, 145, 0);
   color: rgb(255, 145, 0);
 
@@ -92,6 +112,12 @@ label {
   );
   background-size: 24px 150%;
   animation: line-orange 1s linear infinite;
+}
+
+.downloadButton:disabled {
+  border-color: rgb(0, 243, 255, 50%);
+  color: rgb(0, 243, 255, 50%);
+  cursor: default;
 }
 
 @keyframes line-green {
@@ -124,7 +150,9 @@ label {
   }
   15% {
     opacity: 1;
-    text-shadow: -2px 0 white, 2px 0 var(--green);
+    text-shadow:
+      -2px 0 white,
+      2px 0 var(--green);
   }
   17% {
     opacity: 0;
@@ -132,7 +160,9 @@ label {
   }
   20% {
     opacity: 1;
-    text-shadow: 2px 0 white, -2px 0 var(--green),
+    text-shadow:
+      2px 0 white,
+      -2px 0 var(--green),
       0 0 20px rgba(144, 255, 144, 0.5);
   }
   22% {
@@ -141,7 +171,9 @@ label {
   }
   35% {
     opacity: 1;
-    text-shadow: -1px 0 var(--green), 1px 0 white,
+    text-shadow:
+      -1px 0 var(--green),
+      1px 0 white,
       0 0 20px rgba(130, 255, 130, 0.5);
   }
   37% {
@@ -150,7 +182,9 @@ label {
   }
   40% {
     opacity: 1;
-    text-shadow: 2px 0 var(--green), -2px 0 white;
+    text-shadow:
+      2px 0 var(--green),
+      -2px 0 white;
   }
   42% {
     opacity: 0;
@@ -158,7 +192,9 @@ label {
   }
   85% {
     opacity: 1;
-    text-shadow: -1px 0 white, 1px 0 var(--green),
+    text-shadow:
+      -1px 0 white,
+      1px 0 var(--green),
       0 0 20px rgba(43, 255, 43, 0.5);
   }
   87% {
@@ -239,7 +275,9 @@ label {
   }
   15% {
     opacity: 1;
-    text-shadow: -1px 0 var(--blue), 1px 0 var(--pink);
+    text-shadow:
+      -1px 0 var(--blue),
+      1px 0 var(--pink);
   }
   17% {
     opacity: 0;
@@ -247,7 +285,9 @@ label {
   }
   20% {
     opacity: 1;
-    text-shadow: 1px 0 var(--blue), -1px 0 var(--pink),
+    text-shadow:
+      1px 0 var(--blue),
+      -1px 0 var(--pink),
       0 0 20px rgba(255, 43, 157, 0.5);
   }
   22% {
@@ -256,7 +296,9 @@ label {
   }
   35% {
     opacity: 1;
-    text-shadow: -1px 0 var(--pink), 1px 0 var(--blue),
+    text-shadow:
+      -1px 0 var(--pink),
+      1px 0 var(--blue),
       0 0 20px rgba(0, 243, 255, 0.5);
   }
   37% {
@@ -265,7 +307,9 @@ label {
   }
   40% {
     opacity: 1;
-    text-shadow: 1px 0 var(--pink), -1px 0 var(--blue);
+    text-shadow:
+      1px 0 var(--pink),
+      -1px 0 var(--blue);
   }
   42% {
     opacity: 0;
@@ -273,7 +317,9 @@ label {
   }
   85% {
     opacity: 1;
-    text-shadow: -1px 0 var(--blue), 1px 0 var(--pink),
+    text-shadow:
+      -1px 0 var(--blue),
+      1px 0 var(--pink),
       0 0 20px rgba(255, 43, 157, 0.5);
   }
   87% {
