@@ -1,41 +1,46 @@
 import { imageToAsciiAdvanced } from "./imageConverter"
 
-export async function createASCII({ images, isGif, setASCII }) {
+export function createASCII({ images, isGif, isGifHighQuality }) {
   const arraysTexts = {
     small: [],
     medium: [],
     large: [],
   }
-  for (const imagePromisse of images) {
-    const image = await imagePromisse
-
+  for (const image of images) {
     let textSmall,
       textMedium,
       textLarge = {}
 
-    textSmall = await imageToAsciiAdvanced(image.url, {
+    textSmall = imageToAsciiAdvanced(image.image, {
       size: "small",
     })
 
-    textMedium = await imageToAsciiAdvanced(image.url, {
+    textMedium = imageToAsciiAdvanced(image.image, {
       size: "medium",
     })
 
-    arraysTexts.small.push([textSmall.output, textSmall.outputColored])
-    arraysTexts.medium.push([textMedium.output, textMedium.outputColored])
+    arraysTexts.small.push([
+      textSmall.output,
+      textSmall.outputColored,
+      textSmall.asciiHtml,
+    ])
 
-    if (!isGif) {
-      textLarge = await imageToAsciiAdvanced(image.url, {
+    arraysTexts.medium.push([
+      textMedium.output,
+      textMedium.outputColored,
+      textMedium.asciiHtml,
+    ])
+
+    if (!isGif || isGifHighQuality) {
+      textLarge = imageToAsciiAdvanced(image.image, {
         size: "large",
       })
-      arraysTexts.large.push([textLarge.output, textLarge.outputColored])
+      arraysTexts.large.push([
+        textLarge.output,
+        textLarge.outputColored,
+        textLarge.asciiHtml,
+      ])
     }
-
-    setASCII({
-      textSmall: textSmall.asciiHtml,
-      textMedium: textMedium.asciiHtml,
-      textLarge: textLarge?.asciiHtml || null,
-    })
   }
   return arraysTexts
 }

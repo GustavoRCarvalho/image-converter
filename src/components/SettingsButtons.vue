@@ -1,7 +1,7 @@
 <script setup>
 import { storeToRefs } from "pinia"
 import { useDataStore } from "../store/data"
-import { handleSaveAscii } from "../utils/exportImage"
+import { handleSaveAscii, handleSaveGifAscii } from "../utils/exportImage"
 import { ref, watch } from "vue"
 
 const DataStore = useDataStore()
@@ -24,12 +24,16 @@ function handleFile(e) {
 }
 
 async function handleDownload() {
-  const domHTML = document.getElementById("ascii-image").outerHTML
-  handleSaveAscii({
-    asciiColor: domHTML,
-    ascii: ascii.value[size.value],
-    useColor: true,
-  })
+  isGif
+    ? handleSaveGifAscii({
+        asciiArtList: ascii.value[size.value],
+        useColor: true,
+      })
+    : handleSaveAscii({
+        colorAsciiArt: ascii.value[size.value][0][1],
+        asciiArt: ascii.value[size.value][0][2],
+        useColor: true,
+      })
 }
 </script>
 <template>
@@ -44,7 +48,7 @@ async function handleDownload() {
     <input v-show="false" id="file" type="file" @change="handleFile" />
     <button
       class="downloadButton"
-      :disabled="!hasData || isGif"
+      :disabled="!hasData"
       :data-text="size"
       @click="handleDownload"
     >

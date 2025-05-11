@@ -23,15 +23,12 @@ async function loadImageFile(file) {
   }
 
   return [
-    new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       const imageUrl = URL.createObjectURL(file)
       const img = new Image()
 
       img.onload = () => {
-        resolve({
-          url: imageUrl,
-          type: file.type,
-        })
+        resolve({ image: img })
       }
 
       img.onerror = () => {

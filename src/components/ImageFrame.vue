@@ -7,7 +7,8 @@ import { createASCII } from "../utils/createAscii.js"
 
 const DataStore = useDataStore()
 const { setData, setASCII } = DataStore
-const { data, isGif, size, colored, zoom } = storeToRefs(DataStore)
+const { data, ascii, isGif, isGifHighQuality, size, colored, zoom } =
+  storeToRefs(DataStore)
 
 const fontSize = ref(SIZES[size.value].font + "px")
 const lineHeight = ref(SIZES[size.value].lineHeight + "px")
@@ -22,41 +23,33 @@ watch(
   }
 )
 
-const textElement = ref({
-  small: [],
-  medium: [],
-  large: [],
-})
 const isDragging = ref(false)
 const hasData = ref(false)
 const content = ref(null)
 
 watch(
-  () => [...data.value],
-  async (images) => {
+  () => data.value,
+  (images) => {
     if (!images) return
-    const arraysTexts = await createASCII({
-      images: images,
-      isGif: isGif.value,
-      setASCII: setASCII,
-    })
-    textElement.value = {
-      small: arraysTexts.small,
-      medium: arraysTexts.medium,
-      large: arraysTexts.large,
-    }
+    setASCII(
+      createASCII({
+        images: images,
+        isGif: isGif.value,
+        isisGifHighQualityif: isGifHighQuality.value,
+      })
+    )
   },
   { deep: true }
 )
 
 watch(
-  () => [textElement.value, colored.value, size.value],
+  () => [ascii.value, colored.value, size.value],
   ([texts, isColored, size], [_oldTexts, oldIsColored, oldSize]) => {
     const textActual = texts[size]
     if (textActual.length === 0) return
     hasData.value = true
     if (textActual.length > 1 && oldIsColored == isColored && size == oldSize) {
-      gifLoop(texts, isColored)
+      gifLoop(texts)
     }
     if (textActual.length === 1) {
       content.value.firstChild.replaceWith(textActual[0][isColored ? 1 : 0])
@@ -71,7 +64,7 @@ watch(
 function gifLoop(texts) {
   for (let i = 0; i <= texts[size.value].length; i++) {
     setTimeout(() => {
-      if (textElement.value[size.value][0] != texts[size.value][0]) return
+      if (ascii.value[size.value][0] != texts[size.value][0]) return
       if (i == texts[size.value].length) {
         gifLoop(texts)
       } else {
@@ -79,7 +72,7 @@ function gifLoop(texts) {
           texts[size.value][i][colored.value ? 1 : 0]
         )
       }
-    }, 100 * i)
+    }, 63 * i)
   }
 }
 

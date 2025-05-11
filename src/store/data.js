@@ -12,7 +12,8 @@ export const useDataStore = defineStore("data", {
   state: () => ({
     data: ref([]),
     isGif: ref(false),
-    ascii: ref({ small: "", medium: "", large: "" }),
+    isGifHighQuality: ref(false),
+    ascii: ref({ small: [], medium: [], large: [] }),
     size: ref("small"),
     colored: ref(true),
     zoom: ref(1),
@@ -22,8 +23,7 @@ export const useDataStore = defineStore("data", {
       if (file && file.type.match("image.*")) {
         this.isGif = file.type === "image/gif"
         if (this.size == "large" && this.isGif) nextSize()
-        for (const imagePromise of this.data) {
-          const image = await imagePromise
+        for (const image of this.data) {
           if (image?.url) {
             URL.revokeObjectURL(image.url)
           }
@@ -32,13 +32,13 @@ export const useDataStore = defineStore("data", {
         this.data = await images
       }
     },
-    setASCII({ textSmall, textMedium, textLarge }) {
-      this.ascii.small = textSmall
-      this.ascii.medium = textMedium
-      this.ascii.large = textLarge
+    setASCII(arraysAscii) {
+      this.ascii.small = arraysAscii.small
+      this.ascii.medium = arraysAscii.medium
+      this.ascii.large = arraysAscii.large || []
     },
     nextSize() {
-      if (this.isGif) {
+      if (this.isGif && !this.isGifHighQuality) {
         this.size = this.size === "small" ? "medium" : "small"
         return
       }

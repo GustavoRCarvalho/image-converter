@@ -1,6 +1,6 @@
 import { SIZES } from "./constantes"
 
-export async function imageToAsciiAdvanced(image, options = {}) {
+export function imageToAsciiAdvanced(image, options = {}) {
   const {
     size = "small",
     brightnessOptions = {
@@ -13,13 +13,7 @@ export async function imageToAsciiAdvanced(image, options = {}) {
   const fontFamily = "Courier New"
   const width = SIZES[size].width
 
-  const img = new Image()
-
-  await new Promise((resolve, reject) => {
-    img.onload = resolve
-    img.onerror = () => reject(new Error("Falha ao carregar a imagem"))
-    img.src = image
-  })
+  const img = image
 
   const proportion = img.naturalWidth / img.naturalHeight
   const height = width / proportion
