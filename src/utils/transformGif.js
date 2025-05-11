@@ -28,7 +28,7 @@ export async function extractGifFramesAdvanced(gifFile) {
   const frameImages = []
 
   // Processe cada frame
-  frames.forEach((frame, i) => {
+  frames.forEach((frame, _i) => {
     const imageData = new ImageData(
       new Uint8ClampedArray(frame.patch),
       frame.dims.width,
