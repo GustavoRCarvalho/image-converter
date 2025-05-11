@@ -1,11 +1,11 @@
 <script setup>
 import ImageFrame from "./components/ImageFrame.vue"
 import SettingsButtons from "./components/SettingsButtons.vue"
-import TitleHead from "./components/TitleHead.vue"
+import HeadTitle from "./components/HeadTitle.vue"
 </script>
 
 <template>
-  <TitleHead />
+  <HeadTitle />
   <SettingsButtons />
   <ImageFrame />
 </template>
