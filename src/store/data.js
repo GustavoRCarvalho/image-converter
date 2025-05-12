@@ -23,9 +23,9 @@ export const useDataStore = defineStore("data", {
       if (file && file.type.match("image.*")) {
         this.isGif = file.type === "image/gif"
         if (this.size == "large" && this.isGif) nextSize()
-        for (const image of this.data) {
-          if (image?.url) {
-            URL.revokeObjectURL(image.url)
+        for (const { image } of this.data) {
+          if (image?.src) {
+            URL.revokeObjectURL(image.src)
           }
         }
         const images = handleImageUpload(file)

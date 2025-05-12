@@ -93,6 +93,9 @@ export const handleSaveGifAscii = ({ asciiArtList, useColor }) => {
     link.download = "ascii-art.gif"
     link.href = gifUrl
     link.click()
+
+    document.body.removeChild(link)
+    URL.revokeObjectURL(gifUrl)
   })
 
   gif.render()
@@ -165,6 +168,8 @@ export const handleSaveAscii = ({ colorAsciiArt, asciiArt, useColor }) => {
   link.download = "ascii-art.png"
   link.href = canvas.toDataURL("image/png", 1.0)
   link.click()
+
+  document.body.removeChild(link)
 }
 // Adaptado do código original
 // https://github.com/solst-ice/itoa/blob/main/src/App.jsx#L390
