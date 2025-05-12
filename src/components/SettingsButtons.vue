@@ -27,11 +27,13 @@ async function handleDownload() {
   isGif.value
     ? handleSaveGifAscii({
         asciiArtList: ascii.value[size.value],
+        size: size.value,
         useColor: true,
       })
     : handleSaveAscii({
         colorAsciiArt: ascii.value[size.value][0][1],
         asciiArt: ascii.value[size.value][0][2],
+        size: size.value,
         useColor: true,
       })
 }

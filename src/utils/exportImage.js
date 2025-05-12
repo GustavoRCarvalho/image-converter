@@ -1,8 +1,15 @@
 import GIF from "gif.js"
 
-export const handleSaveGifAscii = ({ asciiArtList, useColor }) => {
+const BASE_SCALE_LIB = {
+  small: 32,
+  medium: 24,
+  large: 16,
+}
+
+export const handleSaveGifAscii = ({ asciiArtList, size, useColor }) => {
   if (!asciiArtList[0][0]) return
 
+  const baseScale = BASE_SCALE_LIB[size]
   const canvasList = []
 
   for (const ascii of asciiArtList) {
@@ -16,10 +23,7 @@ export const handleSaveGifAscii = ({ asciiArtList, useColor }) => {
     const charHeight = lines.length
     const charWidth = lines[0].length
 
-    const baseScale = 32
-    const charAspectRatio = 1
-
-    canvas.width = Math.ceil(charWidth * baseScale * charAspectRatio)
+    canvas.width = Math.ceil(charWidth * baseScale)
     canvas.height = Math.ceil(charHeight * baseScale)
 
     ctx.fillStyle = "#0a0a0f"
@@ -55,7 +59,7 @@ export const handleSaveGifAscii = ({ asciiArtList, useColor }) => {
             ctx.fillStyle = brightenedColor
             ctx.fillText(
               span.textContent,
-              Math.round(charIndex * fontSize * charAspectRatio),
+              Math.round(charIndex * fontSize),
               Math.round(lineIndex * fontSize)
             )
             spanIndex++
@@ -100,7 +104,12 @@ export const handleSaveGifAscii = ({ asciiArtList, useColor }) => {
   gif.render()
 }
 
-export const handleSaveAscii = ({ colorAsciiArt, asciiArt, useColor }) => {
+export const handleSaveAscii = ({
+  colorAsciiArt,
+  asciiArt,
+  size,
+  useColor,
+}) => {
   if (!asciiArt && !colorAsciiArt) return
 
   const canvas = document.createElement("canvas")
@@ -110,10 +119,9 @@ export const handleSaveAscii = ({ colorAsciiArt, asciiArt, useColor }) => {
   const charHeight = lines.length
   const charWidth = lines[0].length
 
-  const baseScale = 32
-  const charAspectRatio = 1
+  const baseScale = BASE_SCALE_LIB[size]
 
-  canvas.width = Math.ceil(charWidth * baseScale * charAspectRatio)
+  canvas.width = Math.ceil(charWidth * baseScale)
   canvas.height = Math.ceil(charHeight * baseScale)
 
   ctx.fillStyle = "#0a0a0f"
@@ -124,7 +132,7 @@ export const handleSaveAscii = ({ colorAsciiArt, asciiArt, useColor }) => {
   ctx.imageSmoothingQuality = "high"
 
   const fontSize = baseScale
-  ctx.font = `bold ${fontSize}px "Courier New"`
+  ctx.font = `bold ${fontSize * 1.4}px "Courier New"`
   ctx.textBaseline = "top"
   ctx.textAlign = "left"
   ctx.letterSpacing = "0px"
@@ -149,7 +157,7 @@ export const handleSaveAscii = ({ colorAsciiArt, asciiArt, useColor }) => {
           ctx.fillStyle = brightenedColor
           ctx.fillText(
             span.textContent,
-            Math.round(charIndex * fontSize * charAspectRatio),
+            Math.round(charIndex * fontSize),
             Math.round(lineIndex * fontSize)
           )
           spanIndex++
