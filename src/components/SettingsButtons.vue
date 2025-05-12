@@ -24,7 +24,7 @@ function handleFile(e) {
 }
 
 async function handleDownload() {
-  isGif
+  isGif.value
     ? handleSaveGifAscii({
         asciiArtList: ascii.value[size.value],
         useColor: true,

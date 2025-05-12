@@ -12,7 +12,7 @@ export const useDataStore = defineStore("data", {
   state: () => ({
     data: ref([]),
     isGif: ref(false),
-    isGifHighQuality: ref(false),
+    isGifHighQuality: ref(true),
     ascii: ref({ small: [], medium: [], large: [] }),
     size: ref("small"),
     colored: ref(true),
@@ -22,7 +22,9 @@ export const useDataStore = defineStore("data", {
     async setData(file) {
       if (file && file.type.match("image.*")) {
         this.isGif = file.type === "image/gif"
-        if (this.size == "large" && this.isGif) nextSize()
+        if (this.size == "large" && this.isGif && !this.isGifHighQuality) {
+          nextSize()
+        }
         for (const { image } of this.data) {
           if (image?.src) {
             URL.revokeObjectURL(image.src)
