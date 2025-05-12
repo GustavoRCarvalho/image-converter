@@ -35,7 +35,7 @@ watch(
       createASCII({
         images: images,
         isGif: isGif.value,
-        isisGifHighQualityif: isGifHighQuality.value,
+        isGifHighQuality: isGifHighQuality.value,
       })
     )
   },
