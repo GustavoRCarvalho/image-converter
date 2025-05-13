@@ -13,8 +13,8 @@ const BASE_URL = "/anakin.webp"
 const params = reactive({
   width: 200,
   magnitudeScale: 100,
-  sigma1: 10,
-  sigma2: 1,
+  sigma1: 3,
+  sigma2: 0.5,
 })
 const colored = ref(true)
 const data = ref({})
@@ -31,8 +31,6 @@ watch(
   () => [colored.value, data.value],
   ([stateColored, stateData]) => {
     const pre = document.getElementById("preImageFilter")
-    console.log(stateColored)
-    console.log(stateData)
     if (stateColored) {
       pre.innerHTML = stateData.outputColored
     } else {
