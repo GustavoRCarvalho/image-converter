@@ -250,7 +250,7 @@ export function sobelFilterASCII(
       }
 
       const magnitude = Math.sqrt(pixelX * pixelX + pixelY * pixelY) | 0
-      const angle = Math.atan2(pixelY, pixelX)
+      const angle = Math.atan2(pixelX, pixelY)
 
       const idx = (y * width + x) * 4
       let char = ""
@@ -260,27 +260,23 @@ export function sobelFilterASCII(
       const b = data[idx + 2]
 
       if (magnitude > magnitudeScale) {
-        const normalizedAngle = ((angle + Math.PI) / Math.PI) * 8
-
-        if (normalizedAngle < Math.PI || normalizedAngle > 7 * Math.PI) {
+        if ((angle > -2 && angle < -1.2) || (angle > 1.2 && angle < 2)) {
           // Vertical - Vermelho
           sobelData[idx] = 255
           sobelData[idx + 1] = 0
           sobelData[idx + 2] = 0
           char = "|"
         } else if (
-          normalizedAngle > 3 * Math.PI &&
-          normalizedAngle < 5 * Math.PI
+          (angle > -0.4 && angle < 0.4) ||
+          angle > 2.75 ||
+          angle < -2.75
         ) {
           // Horizonta - Verde
           sobelData[idx] = 0
           sobelData[idx + 1] = 255
           sobelData[idx + 2] = 0
           char = "-"
-        } else if (
-          normalizedAngle >= Math.PI &&
-          normalizedAngle <= 3 * Math.PI
-        ) {
+        } else if (angle < -2 || (angle > 0.4 && angle < 1.2)) {
           // Diagonal 135° - Azul
           sobelData[idx] = 0
           sobelData[idx + 1] = 0
