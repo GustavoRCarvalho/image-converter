@@ -1,4 +1,4 @@
-import { imageToAsciiAdvanced } from "./imageConverter"
+import { imageToAscii } from "./imageConverter"
 
 export function createASCII({ images, isGif, isGifHighQuality }) {
   const arraysTexts = {
@@ -11,33 +11,33 @@ export function createASCII({ images, isGif, isGifHighQuality }) {
       textMedium,
       textLarge = {}
 
-    textSmall = imageToAsciiAdvanced(image.image, {
+    textSmall = imageToAscii(image.image, {
       size: "small",
     })
 
-    textMedium = imageToAsciiAdvanced(image.image, {
+    textMedium = imageToAscii(image.image, {
       size: "medium",
     })
 
     arraysTexts.small.push([
-      textSmall.output,
       textSmall.outputColored,
+      textSmall.outputColoredOutline,
       textSmall.asciiHtml,
     ])
 
     arraysTexts.medium.push([
-      textMedium.output,
       textMedium.outputColored,
+      textMedium.outputColoredOutline,
       textMedium.asciiHtml,
     ])
 
     if (!isGif || isGifHighQuality) {
-      textLarge = imageToAsciiAdvanced(image.image, {
+      textLarge = imageToAscii(image.image, {
         size: "large",
       })
       arraysTexts.large.push([
-        textLarge.output,
         textLarge.outputColored,
+        textLarge.outputColoredOutline,
         textLarge.asciiHtml,
       ])
     }

@@ -6,15 +6,16 @@ import {
   sobelFilterASCII,
 } from "../utils/sobelFilter"
 
-const BASE_URL = "/anakin.webp"
-// const BASE_URL = "/circle.avif"
+// const BASE_URL = "/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+// const BASE_URL = "/anakin.webp"
+const BASE_URL = "/circle.avif"
 // const BASE_URL = "/Coca-Cola_logo.png"
 
 const params = reactive({
-  width: 200,
-  magnitudeScale: 100,
-  sigma1: 3,
-  sigma2: 0.5,
+  width: 50,
+  magnitudeScale: 150,
+  sigma1: 10,
+  sigma2: 0.01,
 })
 const colored = ref(true)
 const data = ref({})

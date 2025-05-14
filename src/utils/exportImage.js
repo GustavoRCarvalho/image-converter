@@ -1,4 +1,5 @@
 import GIF from "gif.js"
+import { FILTER1, FILTER_COLORED } from "./constantes"
 
 const BASE_SCALE_LIB = {
   small: 32,
@@ -6,14 +7,19 @@ const BASE_SCALE_LIB = {
   large: 16,
 }
 
-export const handleSaveGifAscii = ({ asciiArtList, size, useColor }) => {
+export const handleSaveGifAscii = ({
+  asciiArtList,
+  size,
+  useColor,
+  useOutline,
+}) => {
   if (!asciiArtList[0][0]) return
 
   const baseScale = BASE_SCALE_LIB[size]
   const canvasList = []
 
   for (const ascii of asciiArtList) {
-    const colorAsciiArt = ascii[1]
+    const colorAsciiArt = ascii[useOutline ? 1 : 0]
     const asciiArt = ascii[2]
 
     const canvas = document.createElement("canvas")
@@ -39,39 +45,32 @@ export const handleSaveGifAscii = ({ asciiArtList, size, useColor }) => {
     ctx.textAlign = "left"
     ctx.letterSpacing = "0px"
 
-    if (useColor) {
-      const spans = Array.from(colorAsciiArt.querySelectorAll("span"))
-      let spanIndex = 0
+    const spans = Array.from(colorAsciiArt.querySelectorAll("span"))
+    let spanIndex = 0
 
-      lines.forEach((line, lineIndex) => {
-        for (let charIndex = 0; charIndex < line.length; charIndex++) {
-          if (spanIndex < spans.length) {
-            const span = spans[spanIndex]
-            const color = span.style.color
-            const rgb = color.match(/\d+/g) || [0, 0, 0]
-            const brightenedColor = `rgb(${Math.min(
-              255,
-              parseInt(rgb[0]) * 1.3
-            )}, ${Math.min(255, parseInt(rgb[1]) * 1.3)}, ${Math.min(
-              255,
-              parseInt(rgb[2]) * 1.3
-            )})`
-            ctx.fillStyle = brightenedColor
-            ctx.fillText(
-              span.textContent,
-              Math.round(charIndex * fontSize),
-              Math.round(lineIndex * fontSize)
-            )
-            spanIndex++
-          }
+    lines.forEach((line, lineIndex) => {
+      for (let charIndex = 0; charIndex < line.length; charIndex++) {
+        if (spanIndex < spans.length) {
+          const span = spans[spanIndex]
+          const color = span.style.color
+          const rgb = color.match(/\d+/g) || [0, 0, 0]
+          ctx.fillStyle = `rgb(${Math.min(
+            255,
+            parseInt(rgb[0]) * 1.3
+          )}, ${Math.min(255, parseInt(rgb[1]) * 1.3)}, ${Math.min(
+            255,
+            parseInt(rgb[2]) * 1.3
+          )})`
+          ctx.filter = useColor ? FILTER_COLORED : FILTER1
+          ctx.fillText(
+            span.textContent,
+            Math.round(charIndex * fontSize),
+            Math.round(lineIndex * fontSize)
+          )
+          spanIndex++
         }
-      })
-    } else {
-      ctx.fillStyle = "#ff2b9d"
-      lines.forEach((line, i) => {
-        ctx.fillText(line, 0, Math.round(i * fontSize))
-      })
-    }
+      }
+    })
 
     canvasList.push(canvas)
   }
@@ -132,44 +131,37 @@ export const handleSaveAscii = ({
   ctx.imageSmoothingQuality = "high"
 
   const fontSize = baseScale
-  ctx.font = `bold ${fontSize * 1.4}px "Courier New"`
+  ctx.font = `bold ${fontSize}px "Courier New"`
   ctx.textBaseline = "top"
   ctx.textAlign = "left"
   ctx.letterSpacing = "0px"
 
-  if (useColor) {
-    const spans = Array.from(colorAsciiArt.querySelectorAll("span"))
-    let spanIndex = 0
+  const spans = Array.from(colorAsciiArt.querySelectorAll("span"))
+  let spanIndex = 0
 
-    lines.forEach((line, lineIndex) => {
-      for (let charIndex = 0; charIndex < line.length; charIndex++) {
-        if (spanIndex < spans.length) {
-          const span = spans[spanIndex]
-          const color = span.style.color
-          const rgb = color.match(/\d+/g) || [0, 0, 0]
-          const brightenedColor = `rgb(${Math.min(
-            255,
-            parseInt(rgb[0]) * 1.3
-          )}, ${Math.min(255, parseInt(rgb[1]) * 1.3)}, ${Math.min(
-            255,
-            parseInt(rgb[2]) * 1.3
-          )})`
-          ctx.fillStyle = brightenedColor
-          ctx.fillText(
-            span.textContent,
-            Math.round(charIndex * fontSize),
-            Math.round(lineIndex * fontSize)
-          )
-          spanIndex++
-        }
+  lines.forEach((line, lineIndex) => {
+    for (let charIndex = 0; charIndex < line.length; charIndex++) {
+      if (spanIndex < spans.length) {
+        const span = spans[spanIndex]
+        const color = span.style.color
+        const rgb = color.match(/\d+/g) || [0, 0, 0]
+        ctx.fillStyle = `rgb(${Math.min(
+          255,
+          parseInt(rgb[0]) * 1.3
+        )}, ${Math.min(255, parseInt(rgb[1]) * 1.3)}, ${Math.min(
+          255,
+          parseInt(rgb[2]) * 1.3
+        )})`
+        ctx.filter = useColor ? FILTER_COLORED : FILTER1
+        ctx.fillText(
+          span.textContent,
+          Math.round(charIndex * fontSize),
+          Math.round(lineIndex * fontSize)
+        )
+        spanIndex++
       }
-    })
-  } else {
-    ctx.fillStyle = "#ff2b9d"
-    lines.forEach((line, i) => {
-      ctx.fillText(line, 0, Math.round(i * fontSize))
-    })
-  }
+    }
+  })
 
   const link = document.createElement("a")
   link.download = "ascii-art.png"

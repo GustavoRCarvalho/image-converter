@@ -12,7 +12,8 @@ export const useDataStore = defineStore("data", {
   state: () => ({
     data: ref([]),
     isGif: ref(false),
-    isGifHighQuality: ref(true),
+    isGifHighQuality: ref(false),
+    outline: ref(false),
     ascii: ref({ small: [], medium: [], large: [] }),
     size: ref("small"),
     colored: ref(true),
@@ -48,6 +49,9 @@ export const useDataStore = defineStore("data", {
     },
     toggleColored() {
       this.colored = !this.colored
+    },
+    toggleOutline() {
+      this.outline = !this.outline
     },
     nextZoom() {
       if (this.zoom == 8) {

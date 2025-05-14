@@ -2,12 +2,12 @@
 import { ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 import { useDataStore } from "../store/data.js"
-import { SIZES } from "../utils/constantes.js"
+import { FILTER1, FILTER_COLORED, SIZES } from "../utils/constantes.js"
 import { createASCII } from "../utils/createAscii.js"
 
 const DataStore = useDataStore()
 const { setData, setASCII } = DataStore
-const { data, ascii, isGif, isGifHighQuality, size, colored, zoom } =
+const { data, ascii, isGif, isGifHighQuality, size, colored, zoom, outline } =
   storeToRefs(DataStore)
 
 const fontSize = ref(SIZES[size.value].font + "px")
@@ -43,16 +43,16 @@ watch(
 )
 
 watch(
-  () => [ascii.value, colored.value, size.value],
-  ([texts, isColored, size], [_oldTexts, oldIsColored, oldSize]) => {
+  () => [ascii.value, size.value, outline.value],
+  ([texts, size, isOutline], [_oldTexts, oldSize, oldIsOutline]) => {
     const textActual = texts[size]
     if (textActual.length === 0) return
     hasData.value = true
-    if (textActual.length > 1 && oldIsColored == isColored && size == oldSize) {
+    if (textActual.length > 1 && size == oldSize && isOutline == oldIsOutline) {
       gifLoop(texts)
     }
     if (textActual.length === 1) {
-      content.value.firstChild.replaceWith(textActual[0][isColored ? 1 : 0])
+      content.value.firstChild.replaceWith(textActual[0][isOutline ? 1 : 0])
       return
     }
   },
@@ -69,7 +69,7 @@ function gifLoop(texts) {
         gifLoop(texts)
       } else {
         content.value.firstChild.replaceWith(
-          texts[size.value][i][colored.value ? 1 : 0]
+          texts[size.value][i][outline.value ? 1 : 0]
         )
       }
     }, 63 * i)
@@ -115,7 +115,14 @@ function onDrop(e) {
       <br />
       <span>[ jpg / png / svg / gif ]</span>
     </span>
-    <div v-show="hasData" id="ascii-image" ref="content">
+    <div
+      v-show="hasData"
+      id="ascii-image"
+      ref="content"
+      :style="{
+        filter: colored ? FILTER_COLORED : FILTER1,
+      }"
+    >
       <pre></pre>
     </div>
   </figure>

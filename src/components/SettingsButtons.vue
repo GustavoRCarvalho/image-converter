@@ -5,8 +5,8 @@ import { handleSaveAscii, handleSaveGifAscii } from "../utils/exportImage"
 import { ref, watch } from "vue"
 
 const DataStore = useDataStore()
-const { setData, nextSize, nextZoom, toggleColored } = DataStore
-const { ascii, size, zoom, colored, isGif } = storeToRefs(DataStore)
+const { setData, nextSize, nextZoom, toggleColored, toggleOutline } = DataStore
+const { ascii, size, zoom, colored, isGif, outline } = storeToRefs(DataStore)
 
 const hasData = ref(false)
 
@@ -28,20 +28,28 @@ async function handleDownload() {
     ? handleSaveGifAscii({
         asciiArtList: ascii.value[size.value],
         size: size.value,
-        useColor: true,
+        useColor: colored.value,
+        useOutline: outline.value,
       })
     : handleSaveAscii({
-        colorAsciiArt: ascii.value[size.value][0][1],
+        colorAsciiArt: ascii.value[size.value][0][outline.value ? 1 : 0],
         asciiArt: ascii.value[size.value][0][2],
         size: size.value,
-        useColor: true,
+        useColor: colored.value,
       })
 }
 </script>
 <template>
   <div class="optionsContainer">
     <button :class="{ buttonColored: colored }" @click="toggleColored">
-      {{ colored ? "COLORIDO" : "MONOCROMÁTICO" }}
+      {{ colored ? "COLORS" : "MONOCROMATIC" }}
+    </button>
+    <button
+      class="flickerButton"
+      :data-text="outline ? `Outline on` : `Outline off`"
+      @click="toggleOutline"
+    >
+      {{ outline ? "Outline on" : "Outline off" }}
     </button>
     <button class="flickerButton" :data-text="size" @click="nextSize">
       {{ size }}
