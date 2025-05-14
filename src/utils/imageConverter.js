@@ -81,7 +81,7 @@ export function imageToAscii(img, options = {}) {
       }
 
       const magnitude = Math.sqrt(pixelX * pixelX + pixelY * pixelY) | 0
-      const angle = Math.atan2(pixelX, pixelY)
+      const angle = Math.atan2(pixelY, pixelX)
 
       const idx = (y * width + x) * 4
       let char = ""
@@ -103,13 +103,13 @@ export function imageToAscii(img, options = {}) {
 
       if (magnitude > magnitudeScale) {
         if ((angle > -2 && angle < -1.2) || (angle > 1.2 && angle < 2)) {
-          char = "|"
+          char = "-"
         } else if (
           (angle > -0.4 && angle < 0.4) ||
           angle > 2.75 ||
           angle < -2.75
         ) {
-          char = "-"
+          char = "|"
         } else if (angle < -2 || (angle > 0.4 && angle < 1.2)) {
           char = "/"
         } else {
