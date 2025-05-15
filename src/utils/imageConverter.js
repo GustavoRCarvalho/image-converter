@@ -7,12 +7,12 @@ export function imageToAscii(img, options = {}) {
   const {
     size = "small",
     brightnessOptions = BRIGHTNESS_DEFAULT,
-    magnitudeScale = 100,
+    magnitudeScale = 150,
     sigma1 = 10,
     sigma2 = 0.01,
   } = options
   // const asciiChars = " .:=•+#$%@"
-  const asciiChars = " .:=•+#%@■"
+  const asciiChars = " .•+×¤@#■"
   const width = SIZES[size].width
   const proportion = img.naturalWidth / img.naturalHeight
   const height = Math.floor(width / proportion)
