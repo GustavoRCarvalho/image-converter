@@ -1,12 +1,12 @@
 # Image Converter to ASCII
 
-Bem-vindo ao projeto Image Converter to ASCII. Converter imagens em ASCII é uma tarefa interessante e já resolvida a anos, portanto, a inovação e estudo deste projeto visa entender e demonstrar como renderizar milhões de elementos html de forma eficiente em questão de memoria e fluída quando o assunto é gifs.
+Bem-vindo ao projeto Image Converter to ASCII. Converter imagens em ASCII é uma tarefa interessante e já resolvida a anos, portanto, a inovação e estudo deste projeto visa entender e demonstrar como renderizar milhares de elementos html de forma eficiente em questão de memoria e fluída quando o assunto é gifs.
 
 ## Tecnologias Utilizadas
 
 ### Base:
 
-[Vue]([https://github.com/facebook/react](https://vuejs.org/)) <br />
+[Vue](<[https://github.com/facebook/react](https://vuejs.org/)>) <br />
 [Vite](https://github.com/vitejs/vite) <br />
 
 ### Gerenciamento:
@@ -27,22 +27,31 @@ Bem-vindo ao projeto Image Converter to ASCII. Converter imagens em ASCII é uma
 ## Como Iniciar o Projeto
 
 1. Clone este repositório:
+
 ```sh
 git clone https://github.com/GustavoRCarvalho/image-converter
 ```
+
 2. Instale as dependências:
+
 ```sh
 npm install
 ```
+
 OU
+
 ```sh
 pnpm install
 ```
+
 3. Inicie o servidor de desenvolvimento:
+
 ```sh
 npm run dev
 ```
+
 4. Acesse o aplicativo em seu navegador:
+
 ```sh
 http://localhost:5173
 ```
