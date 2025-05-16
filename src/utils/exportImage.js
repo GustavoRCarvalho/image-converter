@@ -16,7 +16,9 @@ export const handleSaveGifAscii = ({
 }) => {
   if (!asciiArtList[0][0]) return
 
-  const baseScale = BASE_SCALE_LIB[size]
+  const fontSize = SIZES[size].font * BASE_SCALE_LIB[size]
+  const lineHeight = SIZES[size].lineHeight * BASE_SCALE_LIB[size]
+
   const filter = useColor
     ? { brightness: 1, saturation: 1.5, contrast: 1.5 }
     : {
@@ -40,21 +42,13 @@ export const handleSaveGifAscii = ({
     const charHeight = lines.length
     const charWidth = lines[0].length
 
-    canvas.width = Math.ceil(charWidth * baseScale)
-    canvas.height = Math.ceil(charHeight * baseScale)
+    canvas.width = Math.ceil(charWidth * lineHeight)
+    canvas.height = Math.ceil(charHeight * lineHeight)
 
     ctx.fillStyle = "#0a0a0f"
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    ctx.textRendering = "geometricPrecision"
-    ctx.imageSmoothingEnabled = true
-    ctx.imageSmoothingQuality = "high"
-
-    const fontSize = baseScale
     ctx.font = `bold ${fontSize}px "Courier New"`
-    ctx.textBaseline = "top"
-    ctx.textAlign = "left"
-    ctx.letterSpacing = "0px"
 
     const spans = Array.from(colorAsciiArt.querySelectorAll("span"))
     let spanIndex = 0
@@ -66,15 +60,15 @@ export const handleSaveGifAscii = ({
           const color = span.style.color
           const rgb = color.match(/\d+/g) || [0, 0, 0]
           const baseRGB = {
-            r: Math.min(255, parseInt(rgb[0]) * 1.3),
-            g: Math.min(255, parseInt(rgb[1]) * 1.3),
-            b: Math.min(255, parseInt(rgb[2]) * 1.3),
+            r: Math.min(255, rgb[0]),
+            g: Math.min(255, rgb[1]),
+            b: Math.min(255, rgb[2]),
           }
           ctx.fillStyle = filtersToRGB(baseRGB, filter)
           ctx.fillText(
             span.textContent,
-            Math.round(charIndex * fontSize),
-            Math.round(lineIndex * fontSize)
+            Math.round(charIndex * lineHeight),
+            Math.round(lineIndex * lineHeight)
           )
           spanIndex++
         }
@@ -157,9 +151,9 @@ export const handleSaveAscii = ({
         const color = span.style.color
         const rgb = color.match(/\d+/g) || [0, 0, 0]
         const baseRGB = {
-          r: Math.min(255, parseInt(rgb[0]) * 1.3),
-          g: Math.min(255, parseInt(rgb[1]) * 1.3),
-          b: Math.min(255, parseInt(rgb[2]) * 1.3),
+          r: Math.min(255, rgb[0]),
+          g: Math.min(255, rgb[1]),
+          b: Math.min(255, rgb[2]),
         }
         ctx.fillStyle = filtersToRGB(baseRGB, filter)
         ctx.fillText(

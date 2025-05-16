@@ -24,7 +24,7 @@ export const useDataStore = defineStore("data", {
       if (file && file.type.match("image.*")) {
         this.isGif = file.type === "image/gif"
         if (this.size == "large" && this.isGif && !this.isGifHighQuality) {
-          nextSize()
+          this.size = "medium"
         }
         for (const { image } of this.data) {
           if (image?.src) {
