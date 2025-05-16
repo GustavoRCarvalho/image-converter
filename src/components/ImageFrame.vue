@@ -209,7 +209,8 @@ figure {
     border-color: var(--pink);
   }
 
-  transition: all 0.4s;
+  transition: border-color, color, box-shadow, width;
+  transition-duration: 0.4s;
 }
 pre {
   transform: scale(var(--zoom));

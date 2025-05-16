@@ -1,10 +1,10 @@
 import GIF from "gif.js"
-import { FILTER1, FILTER_COLORED } from "./constantes"
+import { filtersToRGB } from "./filtersToRGB"
 
 const BASE_SCALE_LIB = {
-  small: 32,
-  medium: 24,
-  large: 16,
+  small: 20,
+  medium: 15,
+  large: 10,
 }
 
 export const handleSaveGifAscii = ({
@@ -16,6 +16,16 @@ export const handleSaveGifAscii = ({
   if (!asciiArtList[0][0]) return
 
   const baseScale = BASE_SCALE_LIB[size]
+  const filter = useColor
+    ? { brightness: 1, saturation: 1.5, contrast: 1.5 }
+    : {
+        sepia: 1,
+        brightness: 0.8,
+        saturation: 4,
+        contrast: 1.5,
+        hueRotate: 250,
+      }
+
   const canvasList = []
 
   for (const ascii of asciiArtList) {
@@ -54,14 +64,12 @@ export const handleSaveGifAscii = ({
           const span = spans[spanIndex]
           const color = span.style.color
           const rgb = color.match(/\d+/g) || [0, 0, 0]
-          ctx.fillStyle = `rgb(${Math.min(
-            255,
-            parseInt(rgb[0]) * 1.3
-          )}, ${Math.min(255, parseInt(rgb[1]) * 1.3)}, ${Math.min(
-            255,
-            parseInt(rgb[2]) * 1.3
-          )})`
-          ctx.filter = useColor ? FILTER_COLORED : FILTER1
+          const baseRGB = {
+            r: Math.min(255, parseInt(rgb[0]) * 1.3),
+            g: Math.min(255, parseInt(rgb[1]) * 1.3),
+            b: Math.min(255, parseInt(rgb[2]) * 1.3),
+          }
+          ctx.fillStyle = filtersToRGB(baseRGB, filter)
           ctx.fillText(
             span.textContent,
             Math.round(charIndex * fontSize),
@@ -119,7 +127,15 @@ export const handleSaveAscii = ({
   const charWidth = lines[0].length
 
   const baseScale = BASE_SCALE_LIB[size]
-
+  const filter = useColor
+    ? { brightness: 1, saturation: 1.5, contrast: 1.5 }
+    : {
+        sepia: 1,
+        brightness: 0.8,
+        saturation: 4,
+        contrast: 1.5,
+        hueRotate: 250,
+      }
   canvas.width = Math.ceil(charWidth * baseScale)
   canvas.height = Math.ceil(charHeight * baseScale)
 
@@ -145,14 +161,12 @@ export const handleSaveAscii = ({
         const span = spans[spanIndex]
         const color = span.style.color
         const rgb = color.match(/\d+/g) || [0, 0, 0]
-        ctx.fillStyle = `rgb(${Math.min(
-          255,
-          parseInt(rgb[0]) * 1.3
-        )}, ${Math.min(255, parseInt(rgb[1]) * 1.3)}, ${Math.min(
-          255,
-          parseInt(rgb[2]) * 1.3
-        )})`
-        ctx.filter = useColor ? FILTER_COLORED : FILTER1
+        const baseRGB = {
+          r: Math.min(255, parseInt(rgb[0]) * 1.3),
+          g: Math.min(255, parseInt(rgb[1]) * 1.3),
+          b: Math.min(255, parseInt(rgb[2]) * 1.3),
+        }
+        ctx.fillStyle = filtersToRGB(baseRGB, filter)
         ctx.fillText(
           span.textContent,
           Math.round(charIndex * fontSize),

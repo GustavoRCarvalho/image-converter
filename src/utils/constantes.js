@@ -20,9 +20,9 @@ export const SIZES = {
 }
 
 export const BRIGHTNESS_DEFAULT = {
-  r: 0.5,
-  g: 0.5,
-  b: 0.5,
+  r: 0.38,
+  g: 0.38,
+  b: 0.38,
 }
 
 export const FILTER1 =

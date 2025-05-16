@@ -90,11 +90,13 @@ export function imageToAscii(img, options = {}) {
       const g = data[idx + 1]
       const b = data[idx + 2]
 
-      const brightness =
+      const brightness = Math.min(
+        1,
         (brightnessOptions.r * r +
           brightnessOptions.g * g +
           brightnessOptions.b * b) /
-        255
+          255
+      )
       const charIndex = Math.floor(brightness * (asciiChars.length - 1))
       char = asciiChars[charIndex] || " "
       const color = `rgb(${r},${g},${b})`
