@@ -6,7 +6,7 @@ Bem-vindo ao projeto Image Converter to ASCII. Converter imagens em ASCII é uma
 
 ### Base:
 
-[Vue](<[https://github.com/facebook/react](https://vuejs.org/)>) <br />
+[Vue](https://vuejs.org/) <br />
 [Vite](https://github.com/vitejs/vite) <br />
 
 ### Gerenciamento:
