@@ -64,7 +64,7 @@ watch(
 function gifLoop(texts) {
   for (let i = 0; i <= texts[size.value].length; i++) {
     setTimeout(() => {
-      if (ascii.value[size.value][0] != texts[size.value][0]) return
+      if (ascii.value[size.value][0][2] != texts[size.value][0][2]) return
       if (i == texts[size.value].length) {
         gifLoop(texts)
       } else {
@@ -72,6 +72,7 @@ function gifLoop(texts) {
           texts[size.value][i][outline.value ? 1 : 0]
         )
       }
+      // }, 1000 * i)
     }, 63 * i)
   }
 }
