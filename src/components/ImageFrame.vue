@@ -186,7 +186,6 @@ figure {
   max-height: min(calc(90vh - 84px), 700px);
 
   min-width: min(calc(75vw - 40px), 700px);
-  /* 84 = (32 + 8 + 2) * 2 */
   max-width: min(calc(100vw - 84px), 1240px);
 
   display: flex;
@@ -217,5 +216,7 @@ pre {
   transform-origin: 0 0;
   transition: transform 0.3s ease;
   padding: calc(32px / var(--zoom));
+  font-family: "Courier New";
+  font-weight: Bold;
 }
 </style>

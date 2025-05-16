@@ -43,13 +43,9 @@ export function imageToAscii(img, options = {}) {
   let asciiHtmlColoredOutline = ""
 
   const outputColored = document.createElement("pre")
-  outputColored.style.fontFamily = "Courier New"
-  outputColored.style.fontWeight = "Bold"
   outputColored.style.width = "min-content"
 
   const outputColoredOutline = document.createElement("pre")
-  outputColoredOutline.style.fontFamily = "Courier New"
-  outputColoredOutline.style.fontWeight = "Bold"
   outputColoredOutline.style.width = "min-content"
 
   const pixelsDoF = differenceOfGaussians(data, canvas, sigma1, sigma2)

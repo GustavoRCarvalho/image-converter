@@ -1,10 +1,11 @@
 import GIF from "gif.js"
 import { filtersToRGB } from "./filtersToRGB"
+import { SIZES } from "./constantes"
 
 const BASE_SCALE_LIB = {
-  small: 20,
-  medium: 15,
-  large: 10,
+  small: 1,
+  medium: 2,
+  large: 4,
 }
 
 export const handleSaveGifAscii = ({
@@ -119,6 +120,9 @@ export const handleSaveAscii = ({
 }) => {
   if (!asciiArt && !colorAsciiArt) return
 
+  const fontSize = SIZES[size].font * BASE_SCALE_LIB[size]
+  const lineHeight = SIZES[size].lineHeight * BASE_SCALE_LIB[size]
+
   const canvas = document.createElement("canvas")
   const ctx = canvas.getContext("2d")
 
@@ -126,7 +130,6 @@ export const handleSaveAscii = ({
   const charHeight = lines.length
   const charWidth = lines[0].length
 
-  const baseScale = BASE_SCALE_LIB[size]
   const filter = useColor
     ? { brightness: 1, saturation: 1.5, contrast: 1.5 }
     : {
@@ -136,21 +139,13 @@ export const handleSaveAscii = ({
         contrast: 1.5,
         hueRotate: 250,
       }
-  canvas.width = Math.ceil(charWidth * baseScale)
-  canvas.height = Math.ceil(charHeight * baseScale)
+  canvas.width = Math.ceil(charWidth * lineHeight)
+  canvas.height = Math.ceil(charHeight * lineHeight)
 
   ctx.fillStyle = "#0a0a0f"
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  ctx.textRendering = "geometricPrecision"
-  ctx.imageSmoothingEnabled = true
-  ctx.imageSmoothingQuality = "high"
-
-  const fontSize = baseScale
   ctx.font = `bold ${fontSize}px "Courier New"`
-  ctx.textBaseline = "top"
-  ctx.textAlign = "left"
-  ctx.letterSpacing = "0px"
 
   const spans = Array.from(colorAsciiArt.querySelectorAll("span"))
   let spanIndex = 0
@@ -169,8 +164,8 @@ export const handleSaveAscii = ({
         ctx.fillStyle = filtersToRGB(baseRGB, filter)
         ctx.fillText(
           span.textContent,
-          Math.round(charIndex * fontSize),
-          Math.round(lineIndex * fontSize)
+          Math.round(charIndex * lineHeight),
+          Math.round(lineIndex * lineHeight)
         )
         spanIndex++
       }
