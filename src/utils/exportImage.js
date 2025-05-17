@@ -26,7 +26,7 @@ export const handleSaveGifAscii = ({
     linesXLength: linesFixed[0].length,
   })
 
-  const canvasList = []
+  let canvasList = []
 
   for (const ascii of asciiArtList) {
     const colorAsciiArt = ascii[useOutline ? 1 : 0]
@@ -40,7 +40,7 @@ export const handleSaveGifAscii = ({
     canvasList.push(canvas)
   }
 
-  const gif = new GIF({
+  let gif = new GIF({
     workers: 2,
     workerScript: "./gif.worker.js",
     quality: 20,
@@ -70,6 +70,9 @@ export const handleSaveGifAscii = ({
     downloadCanvas(gifUrl, "gif")
 
     URL.revokeObjectURL(gifUrl)
+    canvasList = null
+    gif.abort()
+    gif = null
   })
 
   gif.render()
@@ -92,7 +95,7 @@ export const handleSaveAscii = ({
     linesXLength: lines[0].length,
   })
 
-  const canvas = createCanvasFromHtmlElement(colorAsciiArt, {
+  let canvas = createCanvasFromHtmlElement(colorAsciiArt, {
     ...optionsCanvas,
     lines: lines,
   })
@@ -101,6 +104,7 @@ export const handleSaveAscii = ({
   downloadCanvas(canvasURL, "png")
 
   URL.revokeObjectURL(canvasURL)
+  canvas = null // garante que o canvas não possua referência para que o garbage collector o remova da memória
 }
 
 const gerateOptionsCanvas = ({
