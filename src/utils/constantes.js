@@ -19,6 +19,12 @@ export const SIZES = {
   },
 }
 
+export const BASE_SCALE_LIB = {
+  small: 1,
+  medium: 2,
+  large: 4,
+}
+
 export const BRIGHTNESS_DEFAULT = {
   r: 0.38,
   g: 0.38,
@@ -31,3 +37,17 @@ export const FILTER2 =
   "sepia(100%) hue-rotate(337deg) brightness(100%) saturate(300%) drop-shadow(0px 0px 10px #e98ec866) contrast(1.5)"
 export const FILTER_COLORED =
   "brightness(100%) saturate(150%) drop-shadow(0px 0px 10px #e98ec833) contrast(1.5)"
+
+export const FILTER_COLORED_CUSTOM = {
+  brightness: 1,
+  saturation: 1.5,
+  contrast: 1.5,
+}
+
+export const FILTER1_CUSTOM = {
+  sepia: 1,
+  brightness: 0.8,
+  saturation: 4,
+  contrast: 1.5,
+  hueRotate: 250,
+}
