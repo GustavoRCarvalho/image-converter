@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" id="icon" type="image/png" href="/images/i2aRed.png" />
     <link
       rel="preload"
       href="/fonts/Silkscreen/Silkscreen-Regular.ttf"
@@ -31,4 +31,16 @@
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
+  <script>
+    const favicon = document.getElementById("icon")
+    const icons = ["/images/i2aRed.png", "/images/i2aBlue.png"]
+    let iconIndex = 0
+
+    function changeFavicon() {
+      iconIndex = iconIndex ? 0 : 1
+      favicon.href = icons[iconIndex]
+    }
+
+    setInterval(changeFavicon, 1000)
+  </script>
 </html>
