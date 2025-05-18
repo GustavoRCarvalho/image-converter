@@ -5,6 +5,17 @@ Este site está hospedado na plataforma Amazon Amplify.
 
 Bem-vindo ao projeto Image Converter to ASCII. Converter imagens em ASCII é uma tarefa interessante e já resolvida a anos, portanto, a inovação e estudo deste projeto visa entender e demonstrar como renderizar milhares de elementos html de forma eficiente em questão de memoria e fluída quando o assunto é gifs.
 
+## ASCII gerados como exemplo:
+
+Francisco de Goya Vuelo de brujas (1798) (Colorido):
+![ascii-art](https://github.com/user-attachments/assets/1130dcf0-df10-47f8-95d1-f9beddb64b4b)
+
+Nuclear Bomb (Colorido):
+![ascii-art (4)](https://github.com/user-attachments/assets/1dd5dd03-ee33-4b21-8827-ca9a222ea310)
+
+The Underground (monocromático):
+![ascii-art (2)](https://github.com/user-attachments/assets/c764348d-0db0-481d-a174-57e37bec07c3)
+
 ## Tecnologias Utilizadas
 
 ### Base:
