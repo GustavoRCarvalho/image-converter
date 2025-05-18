@@ -1,5 +1,8 @@
 # Image Converter to ASCII
 
+Acesse: [ITOA: Image Converter to ASCII](https://itoa.gustavocarvalho.dev.br/) <br />
+Este site está hospedado na plataforma Amazon Amplify.
+
 Bem-vindo ao projeto Image Converter to ASCII. Converter imagens em ASCII é uma tarefa interessante e já resolvida a anos, portanto, a inovação e estudo deste projeto visa entender e demonstrar como renderizar milhares de elementos html de forma eficiente em questão de memoria e fluída quando o assunto é gifs.
 
 ## Tecnologias Utilizadas
@@ -22,6 +25,7 @@ Bem-vindo ao projeto Image Converter to ASCII. Converter imagens em ASCII é uma
 - **Converte Imagem**: transforma os pixels de uma imagem em letras e exibe como elementos html.
 - **Converte Gif**: Carrega todos quadros de um gif e os exibe em ordem como ASCII.
 - **Cores**: Possui opção de gerar ASCIIs coloridos ou monocromáticos.
+- **Bordas**: É possível visualizar as bordas da imagem com carateres específicos.
 - **Exportar**: Exporta a imagem gerada como .png.
 
 ## Como Iniciar o Projeto
