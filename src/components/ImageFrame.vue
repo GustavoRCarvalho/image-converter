@@ -13,6 +13,7 @@ const { data, ascii, isGif, isGifHighQuality, size, colored, zoom, outline } =
 const fontSize = ref(SIZES[size.value].font + "px")
 const lineHeight = ref(SIZES[size.value].lineHeight + "px")
 const letterSpacing = ref(SIZES[size.value].letterSpacing + "px")
+let globalIntervalId
 
 watch(
   () => size.value,
@@ -49,9 +50,11 @@ watch(
     if (textActual.length === 0) return
     hasData.value = true
     if (textActual.length > 1 && size == oldSize && isOutline == oldIsOutline) {
+      globalIntervalId && clearInterval(globalIntervalId)
       gifLoop(texts)
     }
     if (textActual.length === 1) {
+      globalIntervalId && clearInterval(globalIntervalId)
       content.value.firstChild.replaceWith(textActual[0][isOutline ? 1 : 0])
       return
     }
@@ -62,19 +65,20 @@ watch(
 )
 
 function gifLoop(texts) {
-  for (let i = 0; i <= texts[size.value].length; i++) {
-    setTimeout(() => {
-      if (ascii.value[size.value][0][2] != texts[size.value][0][2]) return
-      if (i == texts[size.value].length) {
-        gifLoop(texts)
-      } else {
-        content.value.firstChild.replaceWith(
-          texts[size.value][i][outline.value ? 1 : 0]
-        )
-      }
-      // }, 1000 * i)
-    }, 63 * i)
-  }
+  let i = 0
+  globalIntervalId = setInterval(() => {
+    if (ascii.value[size.value][0][2] != texts[size.value][0][2]) {
+      return
+    }
+    if (i == texts[size.value].length) {
+      i = 0
+    } else {
+      content.value.firstChild.replaceWith(
+        texts[size.value][i][outline.value ? 1 : 0]
+      )
+    }
+    i++
+  }, 63)
 }
 
 function handleDragOver() {
