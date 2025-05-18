@@ -1,4 +1,5 @@
 import { imageToAscii } from "./imageConverter"
+import { SIZES, SIZES_GIF } from "./constantes"
 
 export function createASCII({ images, isGif, isGifHighQuality }) {
   const arraysTexts = {
@@ -12,11 +13,11 @@ export function createASCII({ images, isGif, isGifHighQuality }) {
       textLarge = {}
 
     textSmall = imageToAscii(image.image, {
-      size: "small",
+      widthSize: isGif ? SIZES_GIF["small"].width : SIZES["small"].width,
     })
 
     textMedium = imageToAscii(image.image, {
-      size: "medium",
+      widthSize: isGif ? SIZES_GIF["medium"].width : SIZES["medium"].width,
     })
 
     arraysTexts.small.push([
@@ -33,7 +34,7 @@ export function createASCII({ images, isGif, isGifHighQuality }) {
 
     if (!isGif || isGifHighQuality) {
       textLarge = imageToAscii(image.image, {
-        size: "large",
+        widthSize: isGif ? SIZES_GIF["large"].width : SIZES["large"].width,
       })
       arraysTexts.large.push([
         textLarge.outputColored,

@@ -187,10 +187,10 @@ figure {
   overflow: auto;
 
   min-height: calc(60vh - 40px);
-  max-height: min(calc(90vh - 84px), 700px);
+  max-height: min(calc(100vh - 30px), 700px);
 
   min-width: min(calc(75vw - 40px), 700px);
-  max-width: min(calc(100vw - 84px), 1240px);
+  max-width: min(calc(100vw - 30px), 1240px);
 
   display: flex;
   justify-content: center;
@@ -219,7 +219,7 @@ pre {
   transform: scale(var(--zoom));
   transform-origin: 0 0;
   transition: transform 0.3s ease;
-  padding: calc(32px / var(--zoom));
+  padding: calc(5px / var(--zoom));
   font-family: "Courier New";
   font-weight: Bold;
 }

@@ -1,21 +1,41 @@
 export const SIZES = {
   small: {
+    width: 75,
+    font: 16,
+    lineHeight: 9,
+    letterSpacing: 0.6,
+  },
+  medium: {
+    width: 150,
+    font: 8,
+    lineHeight: 4.5,
+    letterSpacing: 0.3,
+  },
+  large: {
+    width: 300,
+    font: 4,
+    lineHeight: 2.25,
+    letterSpacing: 0.15,
+  },
+}
+export const SIZES_GIF = {
+  small: {
     width: 50,
     font: 16,
-    lineHeight: 12,
-    letterSpacing: 3,
+    lineHeight: 9,
+    letterSpacing: 0.6,
   },
   medium: {
     width: 100,
     font: 8,
-    lineHeight: 6,
-    letterSpacing: 1.5,
+    lineHeight: 4.5,
+    letterSpacing: 0.3,
   },
   large: {
     width: 200,
     font: 4,
-    lineHeight: 3,
-    letterSpacing: 0.75,
+    lineHeight: 2.25,
+    letterSpacing: 0.15,
   },
 }
 

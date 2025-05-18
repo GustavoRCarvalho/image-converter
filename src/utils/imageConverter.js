@@ -5,7 +5,7 @@ import { differenceOfGaussians } from "./differenceOfGaussians"
 // if the pixel is not a border, uses the traditional brightness method to fill with the right caracter.
 export function imageToAscii(img, options = {}) {
   const {
-    size = "small",
+    widthSize = 100,
     brightnessOptions = BRIGHTNESS_DEFAULT,
     magnitudeScale = 150,
     sigma1 = 10,
@@ -13,9 +13,14 @@ export function imageToAscii(img, options = {}) {
   } = options
   // const asciiChars = " .:=•+#$%@"
   const asciiChars = " .•+×¤@#■"
-  const width = SIZES[size].width
-  const proportion = img.naturalWidth / img.naturalHeight
-  const height = Math.floor(width / proportion)
+  const proportion = img.naturalHeight / img.naturalWidth
+  let height = widthSize
+  let width = widthSize
+  if (proportion >= 1) {
+    width = Math.floor(width / proportion)
+  } else {
+    height = Math.floor(height * proportion)
+  }
 
   const canvas = document.createElement("canvas")
   canvas.width = width
