@@ -1,4 +1,4 @@
-import { extractGifFramesAdvanced2 } from "./transformGif"
+import { extractGifFrames } from "./transformGif"
 
 export async function handleImageUpload(file) {
   if (!file) return null
@@ -6,7 +6,6 @@ export async function handleImageUpload(file) {
   try {
     const imageData = await loadImageFile(file)
     return imageData
-    // Faça algo com a imagem aqui
   } catch (error) {
     console.error("Erro ao carregar imagem:", error)
     return null
@@ -19,7 +18,7 @@ async function loadImageFile(file) {
   }
 
   if (file.type == "image/gif") {
-    return extractGifFramesAdvanced2(file)
+    return extractGifFrames(file)
   }
 
   return [

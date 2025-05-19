@@ -9,5 +9,3 @@ import HeadTitle from "./components/HeadTitle.vue"
   <SettingsButtons />
   <ImageFrame />
 </template>
-
-<style scoped></style>

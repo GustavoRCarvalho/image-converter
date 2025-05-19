@@ -3,13 +3,11 @@ export function differenceOfGaussians(pixels, canvas, sigma1, sigma2) {
   const pixelsCopy1 = new Uint8ClampedArray(pixels)
   const pixelsCopy2 = new Uint8ClampedArray(pixels)
 
-  // Aplica Gaussianas com sigmas diferentes
-  applyGaussianBlur(pixelsCopy1, canvas.width, canvas.height, sigma1) // σ₁ = 3
-  applyGaussianBlur(pixelsCopy2, canvas.width, canvas.height, sigma2) // σ₂ = 1
+  applyGaussianBlur(pixelsCopy1, canvas.width, canvas.height, sigma1) // σ₁
+  applyGaussianBlur(pixelsCopy2, canvas.width, canvas.height, sigma2) // σ₂
 
-  // Calcula a diferença
   for (let i = 0; i < pixels.length; i++) {
-    newPixels[i] = pixelsCopy1[i] - pixelsCopy2[i] + 128 // +128 para visualização
+    newPixels[i] = pixelsCopy1[i] - pixelsCopy2[i] + 128
   }
 
   return newPixels
@@ -19,14 +17,12 @@ function applyGaussianBlur(pixels, width, height, sigma) {
   const kernel = generateGaussianKernel(sigma)
   const tempPixels = new Uint8ClampedArray(pixels.length)
 
-  // Aplica horizontalmente
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       applyKernelAtPixel(pixels, tempPixels, width, height, x, y, kernel, true)
     }
   }
 
-  // Aplica verticalmente
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       applyKernelAtPixel(tempPixels, pixels, width, height, x, y, kernel, false)
@@ -45,7 +41,6 @@ function generateGaussianKernel(sigma) {
     sum += value
   }
 
-  // Normaliza o kernel
   return kernel.map((v) => v / sum)
 }
 
@@ -78,8 +73,8 @@ function applyKernelAtPixel(
   }
 
   const dstPos = (y * width + x) * 4
-  dstPixels[dstPos] = r / sumWeight // R
-  dstPixels[dstPos + 1] = g / sumWeight // G
-  dstPixels[dstPos + 2] = b / sumWeight // B
-  dstPixels[dstPos + 3] = 255 // Alpha (fixo)
+  dstPixels[dstPos] = r / sumWeight
+  dstPixels[dstPos + 1] = g / sumWeight
+  dstPixels[dstPos + 2] = b / sumWeight
+  dstPixels[dstPos + 3] = 255
 }

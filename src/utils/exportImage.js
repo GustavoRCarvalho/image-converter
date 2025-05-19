@@ -168,7 +168,7 @@ function createCanvasFromHtmlElement(
   return canvas
 }
 // Adaptado do código original
-// https://github.com/solst-ice/itoa/blob/main/src/App.jsx#L390
+// https://github.com/solst-ice/itoa/blob/main/src/App.jsx#L194
 
 function downloadCanvas(url, type = "png") {
   const link = document.createElement("a")

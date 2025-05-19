@@ -9,7 +9,7 @@ function readFileAsArrayBuffer(file) {
   })
 }
 
-export async function extractGifFramesAdvanced2(gifFile) {
+export async function extractGifFrames(gifFile) {
   try {
     const buffer = await readFileAsArrayBuffer(gifFile)
 
